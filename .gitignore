@@ -6,6 +6,12 @@ __pycache__/
 # C extensions
 *.so
 
+# structurizer
+.structurizer
+images/
+workspace.json
+.idea
+
 # Distribution / packaging
 .Python
 build/

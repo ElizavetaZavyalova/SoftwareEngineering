@@ -7,36 +7,59 @@ workspace "Name" "Description" {
         driver = person "Водитель" {
             tags "Driver"
         }
-        authorization = softwareSystem "Сервис авторизации"
-        drive = softwareSystem "Сервис поездок"
-        route = softwareSystem "Сервис поиска путей"
-        payment = softwareSystem "Сервис оплаты поездки"
-        user -> payment "оплачивает поездку"
-        payment -> driver "начисляет деньги водителю"
+        authorizationSistem = SoftwareSystem "Система Авторизации" {
+            authorization = container "Сервис авторизации"
+        }
+        driveSistem = SoftwareSystem "Система Поездок" {
+            driverFounder =  container "Сервис поиска ближайших водителей"
+            bd =  container "Поездки"{
+                tags "RDBMS"
+            }
+        }
+        paySistem = SoftwareSystem "Система Оплаты" {
+            payment =  container "Сервис оплаты поездки"
+            bd =  container "Хранилище информации о Счете"{
+                tags "RDBMS"
+            }
+        }
 
-        user -> authorization "авторизируется"
-        driver -> authorization "авторизируется"
+        user -> authorizationSistem "авторизируется"
+        driver -> authorizationSistem "авторизируется"
+        paySistem.bd -> authorizationSistem.authorization "Получание доступа к номеру счета"
 
-        driver -> drive "Добавляет/Удаляет информацию о поездке"
+        user -> driveSistem "Отправляет геолокацию"
+        driver -> driveSistem "Отправляет геолокацию"
+        driveSistem.driverFounder -> user "Отправляет список ближайших водителей"
+        driveSistem.driverFounder -> driver "Добавляет информацию о пользователе"
 
-        user -> route "Ищет маршрут"
+        driveSistem.driverFounder -> driveSistem.bd "информация о водители и поездке"
+
+        driveSistem.bd -> paySistem.payment "Получает информацию о поездке"
+        paySistem.payment -> paySistem.bd "Отправляет информацию о платеже"
 
     }
-
     views {
-        systemContext authorization "Authorization" {
+        systemContext driveSistem "DriveSistem" {
             include *
             autolayout lr
         }
-        systemContext payment "Payment" {
+        container driveSistem "DriveSistemWorks" {
             include *
             autolayout lr
         }
-        systemContext drive "Drive" {
+        systemContext authorizationSistem "AuthorizationSistem" {
             include *
             autolayout lr
         }
-        systemContext route "Route" {
+        container authorizationSistem "AuthorizationSistemWorks" {
+            include *
+            autolayout lr
+        }
+        systemContext paySistem "PaySistem" {
+            include *
+            autolayout lr
+        }
+        container paySistem "PaySistemWorks" {
             include *
             autolayout lr
         }
@@ -55,6 +78,11 @@ workspace "Name" "Description" {
                 background #2F4F4F
                 color #ffffff
                 shape robot
+            }
+            element "RDBMS" {
+                background #2F4F4F
+                color #ffffff
+                shape cylinder
             }
         }
     }
