@@ -27,9 +27,9 @@ workspace "Name" "Description" {
 
         driveSistem.authorization -> driveSistem.bd "Получание информации о юзере"
         driveSistem.driverFounder -> user "Отправляет список ближайших водителей"
-        driver  -> driveSistem.driverFounder "Добавляет информацию о пользователе"
+        driver  -> driveSistem.driverFounder "Отправляет информацию о маршруте"
 
-        driveSistem.driverFounder -> driveSistem.bd "информация о водители и поездке"
+        driveSistem.driverFounder -> driveSistem.bd "Информация о водители и поездке"
 
         driveSistem.payment -> driveSistem.bd "Оплата поездки"
 
