@@ -7,41 +7,66 @@ workspace "Name" "Description" {
         driver = person "Водитель" {
             tags "Driver"
         }
-        driveSistem = SoftwareSystem "Система Поездок" {
-            driverFounder =  container "Сервис поиска ближайших водителей"{
-                tags FINDER
-            }
+        paySistem = SoftwareSystem "Система Платежей" {
+            tags PAY_SISTEM
             authorization = container "Сервис авторизации"{
                 tags AUTORIZATION
             }
             payment =  container "Сервис оплаты поездки"{
                 tags PAY
             }
+            paybd =  container "База данных платежей"{
+                tags RDBMS
+            }
+        }
+        driveSistem = SoftwareSystem "Система Поездок" {
+            tags DRIVE_SISTEM
+            driverFounder =  container "Сервис поиска ближайших водителей"{
+                tags FINDER
+            }
+            addingRoute =  container "Сервис добаления маршрутов"{
+                tags ROUTE
+            }
+            connectingTrips =  container "Сервис подключения к поездке"{
+                tags TRIPS
+            }
             bd =  container "База данных поездок"{
                 tags RDBMS
             }
         }
 
-        user -> driveSistem.authorization "авторизируется"
-        driver -> driveSistem.authorization "авторизируется"
+        user -> paySistem.authorization "авторизируется"
+        driver -> paySistem.authorization "авторизируется"
+        paySistem.authorization -> paySistem.paybd "Получение доступа к счету"
 
-        driveSistem.authorization -> driveSistem.bd "Получание информации о юзере"
-        driveSistem.driverFounder -> user "Отправляет список ближайших водителей"
-        driver  -> driveSistem.driverFounder "Отправляет информацию о маршруте"
+        driver -> driveSistem.addingRoute "Добавляет/Удаляет информацию о маршруте"
+        driveSistem.addingRoute -> driveSistem.bd "Запись информации о маршрутах"
 
-        driveSistem.driverFounder -> driveSistem.bd "Информация о водители и поездке"
+        user -> driveSistem.driverFounder "Ищет ближайших водителей"
+        driveSistem.driverFounder -> driveSistem.bd "Использует данные о поездках"
 
-        driveSistem.payment -> driveSistem.bd "Оплата поездки"
+        user -> driveSistem.connectingTrips "Подключается к поездке"
+
+        driveSistem.connectingTrips -> driver "Отпраляет сообщение водителю"
+        driveSistem.connectingTrips -> paySistem.payment "Оплата поездки"
+        driveSistem.connectingTrips -> driveSistem.bd "Добавляет информацию о новой поездке"
+
+        paySistem.payment -> paySistem.paybd "Произведение платежа"
+
 
     }
     views {
         systemContext driveSistem "DriveSistem" {
             include *
-            autolayout lr
+        }
+        systemContext paySistem "PaySistem" {
+            include *
         }
         container driveSistem "DriveSistemWorks" {
             include *
-            autolayout lr
+        }
+        container paySistem "PaySistemWorks" {
+            include *
         }
         styles {
             element "Software System" {
@@ -55,7 +80,7 @@ workspace "Name" "Description" {
                 shape person
             }
             element "Driver" {
-                background #2F4F4F
+                background #696969
                 color #ffffff
                 shape robot
             }
@@ -65,7 +90,7 @@ workspace "Name" "Description" {
                 shape cylinder
             }
             element "FINDER" {
-                background #2FFF4F
+                background #008080
                 color #ffffff
                 shape RoundedBox
             }
@@ -76,6 +101,26 @@ workspace "Name" "Description" {
             }
             element "PAY" {
                 background #FF4F4F
+                color #ffffff
+                shape RoundedBox
+            }
+            element "TRIPS" {
+                background #FF4F4F
+                color #ffffff
+                shape RoundedBox
+            }
+            element "ROUTE" {
+                background #9932cc
+                color #ffffff
+                shape RoundedBox
+            }
+            element "PAY_SISTEM" {
+                background #6495ed
+                color #ffffff
+                shape RoundedBox
+            }
+            element "DRIVE_SYSTEM" {
+                background #9932cc
                 color #ffffff
                 shape RoundedBox
             }
