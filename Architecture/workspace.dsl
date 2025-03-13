@@ -7,35 +7,31 @@ workspace "Name" "Description" {
         driver = person "Водитель" {
             tags "Driver"
         }
-        authorizationSistem = SoftwareSystem "Система Авторизации" {
-            authorization = container "Сервис авторизации"
-        }
         driveSistem = SoftwareSystem "Система Поездок" {
-            driverFounder =  container "Сервис поиска ближайших водителей"
-            bd =  container "Поездки"{
-                tags "RDBMS"
+            driverFounder =  container "Сервис поиска ближайших водителей"{
+                tags FINDER
             }
-        }
-        paySistem = SoftwareSystem "Система Оплаты" {
-            payment =  container "Сервис оплаты поездки"
-            bd =  container "Хранилище информации о Счете"{
-                tags "RDBMS"
+            authorization = container "Сервис авторизации"{
+                tags AUTORIZATION
+            }
+            payment =  container "Сервис оплаты поездки"{
+                tags PAY
+            }
+            bd =  container "База данных поездок"{
+                tags RDBMS
             }
         }
 
-        user -> authorizationSistem "авторизируется"
-        driver -> authorizationSistem "авторизируется"
-        paySistem.bd -> authorizationSistem.authorization "Получание доступа к номеру счета"
+        user -> driveSistem.authorization "авторизируется"
+        driver -> driveSistem.authorization "авторизируется"
 
-        user -> driveSistem "Отправляет геолокацию"
-        driver -> driveSistem "Отправляет геолокацию"
+        driveSistem.authorization -> driveSistem.bd "Получание информации о юзере"
         driveSistem.driverFounder -> user "Отправляет список ближайших водителей"
-        driveSistem.driverFounder -> driver "Добавляет информацию о пользователе"
+        driver  -> driveSistem.driverFounder "Добавляет информацию о пользователе"
 
         driveSistem.driverFounder -> driveSistem.bd "информация о водители и поездке"
 
-        driveSistem.bd -> paySistem.payment "Получает информацию о поездке"
-        paySistem.payment -> paySistem.bd "Отправляет информацию о платеже"
+        driveSistem.payment -> driveSistem.bd "Оплата поездки"
 
     }
     views {
@@ -44,22 +40,6 @@ workspace "Name" "Description" {
             autolayout lr
         }
         container driveSistem "DriveSistemWorks" {
-            include *
-            autolayout lr
-        }
-        systemContext authorizationSistem "AuthorizationSistem" {
-            include *
-            autolayout lr
-        }
-        container authorizationSistem "AuthorizationSistemWorks" {
-            include *
-            autolayout lr
-        }
-        systemContext paySistem "PaySistem" {
-            include *
-            autolayout lr
-        }
-        container paySistem "PaySistemWorks" {
             include *
             autolayout lr
         }
@@ -83,6 +63,21 @@ workspace "Name" "Description" {
                 background #2F4F4F
                 color #ffffff
                 shape cylinder
+            }
+            element "FINDER" {
+                background #2FFF4F
+                color #ffffff
+                shape RoundedBox
+            }
+            element "AUTORIZATION" {
+                background #2F4FFF
+                color #ffffff
+                shape RoundedBox
+            }
+            element "PAY" {
+                background #FF4F4F
+                color #ffffff
+                shape RoundedBox
             }
         }
     }
