@@ -7,65 +7,39 @@ workspace "Name" "Description" {
         driver = person "Водитель" {
             tags "Driver"
         }
-        paySistem = SoftwareSystem "Система Платежей" {
-            tags PAY_SISTEM
-            authorization = container "Сервис авторизации"{
-                tags AUTORIZATION
-            }
-            payment =  container "Сервис оплаты поездки"{
-                tags PAY
-            }
-            paybd =  container "База данных платежей"{
-                tags RDBMS
-            }
-        }
         driveSistem = SoftwareSystem "Система Поездок" {
             tags DRIVE_SISTEM
-            driverFounder =  container "Сервис поиска ближайших водителей"{
+            driverFounder = container "Сервис поиска ближайших водителей" {
                 tags FINDER
             }
-            addingRoute =  container "Сервис добаления маршрутов"{
+            addingRoute = container "Сервис добаления маршрутов" {
                 tags ROUTE
             }
-            connectingTrips =  container "Сервис подключения к поездке"{
+            connectingTrips = container "Сервис подключения к поездке" {
                 tags TRIPS
             }
-            bd =  container "База данных поездок"{
+            approveConnectingTrips = container "Сервис подтверждения поездки" {
+                tags APPROVE
+            }
+            bd = container "База данных поездок" {
                 tags RDBMS
             }
         }
-
-        user -> paySistem.authorization "авторизируется"
-        driver -> paySistem.authorization "авторизируется"
-        paySistem.authorization -> paySistem.paybd "Получение доступа к счету"
-
-        driver -> driveSistem.addingRoute "Добавляет/Удаляет информацию о маршруте"
-        driveSistem.addingRoute -> driveSistem.bd "Запись информации о маршрутах"
-
-        user -> driveSistem.driverFounder "Ищет ближайших водителей"
-        driveSistem.driverFounder -> driveSistem.bd "Использует данные о поездках"
-
-        user -> driveSistem.connectingTrips "Подключается к поездке"
-
-        driveSistem.connectingTrips -> driver "Отпраляет сообщение водителю"
-        driveSistem.connectingTrips -> paySistem.payment "Оплата поездки"
-        driveSistem.connectingTrips -> driveSistem.bd "Добавляет информацию о новой поездке"
-
-        paySistem.payment -> paySistem.paybd "Произведение платежа"
-
-
+        driver ->  driveSistem.addingRoute "Добавление информации о местонахождении"
+        driveSistem.addingRoute -> driveSistem.bd "Добавляет информацию о  местонахождении водителя"
+        user -> driveSistem.driverFounder "Поиск ближайших водителей"
+        driveSistem.driverFounder -> driveSistem.bd "Получение информации о  местонахождении свободных водителей"
+        user -> driveSistem.connectingTrips "Запрос на приезд водителя"
+        driveSistem.connectingTrips -> driver "Запрос на разрешение подключения"
+        driver -> driveSistem.approveConnectingTrips "Подтверждение/отклонение подключения"
+        driveSistem.approveConnectingTrips -> user "Информация о решении водителя"
+        driveSistem.approveConnectingTrips -> driveSistem.bd "Обновление инфориации"
     }
     views {
         systemContext driveSistem "DriveSistem" {
             include *
         }
-        systemContext paySistem "PaySistem" {
-            include *
-        }
         container driveSistem "DriveSistemWorks" {
-            include *
-        }
-        container paySistem "PaySistemWorks" {
             include *
         }
         styles {
@@ -94,7 +68,7 @@ workspace "Name" "Description" {
                 color #ffffff
                 shape RoundedBox
             }
-            element "AUTORIZATION" {
+            element "APPROVE" {
                 background #2F4FFF
                 color #ffffff
                 shape RoundedBox
@@ -111,11 +85,6 @@ workspace "Name" "Description" {
             }
             element "ROUTE" {
                 background #9932cc
-                color #ffffff
-                shape RoundedBox
-            }
-            element "PAY_SISTEM" {
-                background #6495ed
                 color #ffffff
                 shape RoundedBox
             }
