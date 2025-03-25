@@ -18,6 +18,14 @@ workspace "Name" "Description" {
                 tags RDBMS
             }
         }
+        connectingSistem = SoftwareSystem "Система Подключения к поездке" {
+            connectingTrips = container "Сервис подключения к поездке" {
+                tags TRIPS
+            }
+            approveConnectingTrips = container "Сервис подтверждения поездки" {
+                tags APPROVE
+            }
+        }
         driveSistem = SoftwareSystem "Система Поездок" {
             tags DRIVE_SISTEM
             driverFounder = container "Сервис поиска ближайших водителей" {
@@ -25,12 +33,6 @@ workspace "Name" "Description" {
             }
             addingRoute = container "Сервис добаления маршрутов" {
                 tags ROUTE
-            }
-            connectingTrips = container "Сервис подключения к поездке" {
-                tags TRIPS
-            }
-            approveConnectingTrips = container "Сервис подтверждения поездки" {
-                tags APPROVE
             }
             bd = container "База данных поездок" {
                 tags RDBMS
@@ -42,15 +44,14 @@ workspace "Name" "Description" {
 
         user -> driveSistem.driverFounder "Поиск ближайших водителей"
         driveSistem.driverFounder -> driveSistem.bd "Получение информации о  местонахождении свободных водителей"
-
-        user -> driveSistem.connectingTrips "Запрос на приезд водителя"
-        driveSistem.connectingTrips -> driver "Запрос на разрешение подключения"
-
-        driver -> driveSistem.approveConnectingTrips "Подтверждение/отклонение подключения"
-        driveSistem.approveConnectingTrips -> user "Информация о решении водителя"
-
-        driveSistem.approveConnectingTrips -> driveSistem.bd "Обновление инфориации"
         driveSistem.driverFounder -> registerSistem.bdUser "Информация о пользователях"
+
+        user -> connectingSistem.connectingTrips "Запрос на приезд водителя"
+        connectingSistem.connectingTrips -> driver "Запрос на разрешение подключения"
+
+        driver -> connectingSistem.approveConnectingTrips "Подтверждение/отклонение подключения"
+        connectingSistem.approveConnectingTrips -> user "Информация о решении водителя"
+        connectingSistem.approveConnectingTrips -> driveSistem.bd "Обновление инфориации"
 
         registerSistem.registration ->  registerSistem.bdUser "Регистрация как User"
         registerSistem.registration ->  registerSistem.bdDriver "Регистрация как Водитель"
@@ -64,10 +65,17 @@ workspace "Name" "Description" {
         container driveSistem "DriveSistemWorks" {
             include *
             exclude registerSistem
+            exclude connectingSistem
+        }
+        container connectingSistem "connectingSistemWorks" {
+            include *
+            exclude registerSistem
+            exclude driveSistem
         }
         container registerSistem "RegisterSistemWorks" {
             include *
             exclude driveSistem
+            exclude connectingSistem
         }
         styles {
             element "Software System" {
