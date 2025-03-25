@@ -7,6 +7,17 @@ workspace "Name" "Description" {
         driver = person "Водитель" {
             tags "Driver"
         }
+        registerSistem = SoftwareSystem "Система Регистрации" {
+            bdUser = container "База данных пользователей" {
+                tags RDBMS
+            }
+            registration = container "Сервис регистрации" {
+                tags REGISTER
+            }
+            bdDriver = container "База данных водителей" {
+                tags RDBMS
+            }
+        }
         driveSistem = SoftwareSystem "Система Поездок" {
             tags DRIVE_SISTEM
             driverFounder = container "Сервис поиска ближайших водителей" {
@@ -26,14 +37,25 @@ workspace "Name" "Description" {
             }
         }
         driver ->  driveSistem.addingRoute "Добавление информации о местонахождении"
+        driveSistem.addingRoute -> registerSistem.bdDriver "Проверка наличия в системе"
         driveSistem.addingRoute -> driveSistem.bd "Добавляет информацию о  местонахождении водителя"
+
         user -> driveSistem.driverFounder "Поиск ближайших водителей"
         driveSistem.driverFounder -> driveSistem.bd "Получение информации о  местонахождении свободных водителей"
+
         user -> driveSistem.connectingTrips "Запрос на приезд водителя"
         driveSistem.connectingTrips -> driver "Запрос на разрешение подключения"
+
         driver -> driveSistem.approveConnectingTrips "Подтверждение/отклонение подключения"
         driveSistem.approveConnectingTrips -> user "Информация о решении водителя"
+
         driveSistem.approveConnectingTrips -> driveSistem.bd "Обновление инфориации"
+        driveSistem.driverFounder -> registerSistem.bdUser "Информация о пользователях"
+
+        registerSistem.registration ->  registerSistem.bdUser "Регистрация как User"
+        registerSistem.registration ->  registerSistem.bdDriver "Регистрация как Водитель"
+        driver ->  registerSistem.registration "Регистрация"
+        user ->  registerSistem.registration "Регистрация"
     }
     views {
         systemContext driveSistem "DriveSistem" {
@@ -41,6 +63,11 @@ workspace "Name" "Description" {
         }
         container driveSistem "DriveSistemWorks" {
             include *
+            exclude registerSistem
+        }
+        container registerSistem "RegisterSistemWorks" {
+            include *
+            exclude driveSistem
         }
         styles {
             element "Software System" {
