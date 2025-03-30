@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  admin:
+    build:
+      context: .
+      dockerfile: AdminSistemDockerfile
+    container_name: admin
+    restart: always
+    ports:
+      - "8001:8000"
+
+  passenger:
+    build:
+      context: .
+      dockerfile: AccountSistemPassengerDockerfile
+    container_name: passenger
+    restart: always
+    ports:
+      - "8002:8000"
+
+  driver:
+    build:
+      context: .
+      dockerfile: AccountSistemDriverDockerfile
+    container_name: driver
+    restart: always
+    ports:
+      - "8003:8000"
+
+  adding_trips:
+    build:
+      context: .
+      dockerfile: DriverSistemAddingTripDockerfile
+    container_name: adding_trips
+    restart: always
+    ports:
+      - "8004:8000"
+
+  connect_trips:
+    build:
+      context: .
+      dockerfile: DriverSistemConnectTripDockerfile
+    container_name: connect_trips
+    restart: always
+    ports:
+      - "8005:8000"
