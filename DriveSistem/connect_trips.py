@@ -1,0 +1,40 @@
+import uvicorn
+from fastapi import FastAPI, Depends
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+
+from drive_sistem.connect_trip.controller.passenger_controller import PassengerController
+from drive_sistem.connect_trip.controller.trips_controller import ConnectTripsController
+from entity.account import Account
+
+app = FastAPI()
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+passengers = PassengerController()
+routes = ConnectTripsController()
+
+######################Вход###############################
+@app.post("/token", tags=[PassengerController._LOG_IN])
+def token(form_data: OAuth2PasswordRequestForm = Depends()):
+    return passengers.login(Account(email=form_data.username, password=form_data.password))
+
+##########################################################
+@app.post("/passenger/trip/{id}/connect", tags=[''])
+def connect_to_trip(id:int, token: str = Depends(oauth2_scheme)):
+    return routes.connect_to_trip(id=id, token=token)
+
+@app.delete("/passenger/trip/{id}/cancel", tags=[''])
+def cancel_trip(id:int, token: str = Depends(oauth2_scheme)):
+    return routes.cancel_trip(id=id, token=token)
+
+@app.get("/passenger/trip/{id}/", tags=[''])
+def get_trip(id:int, token: str = Depends(oauth2_scheme)):
+    return routes.get_trip(id=id, token=token)
+@app.get("/passenger/trips/", tags=[''])
+def get_trips(token: str = Depends(oauth2_scheme)):
+    return routes.get_trips(token=token)
+@app.get("/passenger/trips/connected", tags=[''])
+def get_connected_trips(token: str = Depends(oauth2_scheme)):
+    return routes.get_connected_trips(token=token)
+
+if __name__ == '__main__':
+    uvicorn.run('connect_trips:app', host="0.0.0.0", port=8000)
