@@ -1,15 +1,16 @@
 from fastapi import HTTPException
 
-from drive_sistem.adding_route.repository.adding_route_repository import AddingRouteRepository
+from drive_sistem.adding_route.repository.adding_trips_repository import AddingTripsRepository
 from drive_sistem.adding_route.repository.driver_repository import DriverRepository
 from entity.trip_description import TripDescription
 from tocken_generator.cryptography import Cryptography
 
 
-class RouteController:
+class AddingTripsController:
+    _EDITING_TRIPS="Редактирование поездок"
     def __init__(self):
         self.drivers = DriverRepository()
-        self.routes = AddingRouteRepository()
+        self.routes = AddingTripsRepository()
 
     def create_trip(self, trip_info: TripDescription, token: str):
         account = Cryptography().decrypt_token(token)

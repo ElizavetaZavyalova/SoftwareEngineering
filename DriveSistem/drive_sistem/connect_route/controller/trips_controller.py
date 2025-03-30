@@ -1,14 +1,14 @@
 from fastapi import HTTPException
 
-from drive_sistem.route_founder.repository.adding_route_repository import AddingRouteRepository
-from drive_sistem.route_founder.repository.passenger_repository import PassengerRepository
+from drive_sistem.connect_route.repository.adding_trips_repository import AddingTripsRepository
+from drive_sistem.connect_route.repository.passenger_repository import PassengerRepository
 from tocken_generator.cryptography import Cryptography
 
 
-class RouteController:
+class ConnectTripsController:
     def __init__(self):
         self.passengers = PassengerRepository()
-        self.routes = AddingRouteRepository()
+        self.routes = AddingTripsRepository()
 
     def connect_to_trip(self, id: int, token: str):
         account = Cryptography().decrypt_token(token)

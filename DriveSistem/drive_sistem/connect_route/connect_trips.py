@@ -2,18 +2,18 @@ import uvicorn
 from fastapi import FastAPI, Depends
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
-from drive_sistem.route_founder.controller.passenger_controller import PassengerController
-from drive_sistem.route_founder.controller.route_controller import RouteController
+from drive_sistem.connect_route.controller.passenger_controller import PassengerController
+from drive_sistem.connect_route.controller.trips_controller import ConnectTripsController
 from entity.account import Account
 
 app = FastAPI()
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 passengers = PassengerController()
-routes = RouteController()
+routes = ConnectTripsController()
 
 ######################Вход###############################
-@app.post("/token", tags=[''])
+@app.post("/token", tags=[PassengerController._LOG_IN])
 def token(form_data: OAuth2PasswordRequestForm = Depends()):
     return passengers.login(Account(email=form_data.username, password=form_data.password))
 
@@ -37,4 +37,4 @@ def get_connected_trips(token: str = Depends(oauth2_scheme)):
     return routes.get_connected_trips(token=token)
 
 if __name__ == '__main__':
-    uvicorn.run('route_founder:app', reload=True)
+    uvicorn.run('connect_trips:app', reload=True)

@@ -3,7 +3,7 @@ from fastapi import FastAPI, Depends
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 from drive_sistem.adding_route.controller.driver_controller import DriverController
-from drive_sistem.adding_route.controller.route_controller import RouteController
+from drive_sistem.adding_route.controller.trips_controller import AddingTripsController
 from entity.account import Account
 from entity.trip_description import TripDescription
 
@@ -11,10 +11,10 @@ app = FastAPI()
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 drivers = DriverController()
-routes = RouteController()
+routes = AddingTripsController()
 
 ######################Вход###############################
-@app.post("/token", tags=[''])
+@app.post("/token", tags=[DriverController._LOG_IN])
 def token(form_data: OAuth2PasswordRequestForm = Depends()):
     return drivers.login(Account(email=form_data.username, password=form_data.password))
 
@@ -46,4 +46,4 @@ def delete_trip(id: int, token: str = Depends(oauth2_scheme)):
 
 
 if __name__ == '__main__':
-    uvicorn.run('adding_route:app', reload=True)
+    uvicorn.run('adding_trips:app', reload=True)

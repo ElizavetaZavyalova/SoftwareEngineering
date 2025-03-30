@@ -1,6 +1,6 @@
 from http.client import HTTPException
 
-from drive_sistem.route_founder.repository.passenger_repository import PassengerRepository
+from drive_sistem.connect_route.repository.passenger_repository import PassengerRepository
 from entity.account import Account
 from tocken_generator.cryptography import Cryptography
 

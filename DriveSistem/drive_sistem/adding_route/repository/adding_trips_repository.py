@@ -1,9 +1,8 @@
-from drive_sistem.adding_route.adding_route import create_trip
 from entity.driver import Driver
 from entity.trip_description import TripDescription
 
 
-class AddingRouteRepository:
+class AddingTripsRepository:
     def __init__(self):
         self.trips = []
 
