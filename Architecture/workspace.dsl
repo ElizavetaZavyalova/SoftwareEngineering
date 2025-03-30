@@ -128,6 +128,11 @@ workspace "Name" "Description" {
                 color #ffffff
                 shape RoundedBox
             }
+            element "QUEUE" {
+                background #47a76a
+                color #ffffff
+                shape Pipe
+            }
         }
     }
 }
