@@ -4,12 +4,11 @@ from admin_sistem.repository.admin_repository import AdminRepository
 from admin_sistem.repository.driver_repository import DriverRepository
 from tocken_generator.cryptography import Cryptography
 
-
 class DriverController:
     _DRIVERS='Водители'
-    def __init__(self):
-        self.drivers = DriverRepository()
-        self.admins = AdminRepository()
+    def __init__(self, drivers: DriverRepository, admin_repository: AdminRepository):
+        self.rivers = drivers
+        self.admins = admin_repository
 
     def get_drivers(self, token:str) -> list:
         account = Cryptography().decrypt_token(token)

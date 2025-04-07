@@ -1,3 +1,5 @@
+import os
+
 import uvicorn
 from fastapi import FastAPI, Depends
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
@@ -17,7 +19,7 @@ app = FastAPI(
     docs_url="/docs"
 )
 redis_repository = DriverRepositoryRedis()
-account_repository = DriverRepositoryRDBMS()
+account_repository = DriverRepositoryRDBMS(os.getenv("DATABASE_URL", "postgresql://root:root@localhost:5501/drivers"))
 controller = Controller(redis_repository, account_repository)
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")

@@ -15,6 +15,10 @@ services:
       context: .
       dockerfile: admin_system.dockerfile
     container_name: admin
+    environment:
+      DATABASE_PASSENGER_URL: postgresql://root:root@localhost:5502/passengers
+      DATABASE_ADMINS_URL: postgresql://root:root@localhost:5503/admins
+      DATABASE_DRIVER_URL: postgresql://root:root@localhost:5501/drivers
     restart: always
     ports:
       - "8001:8000"
@@ -24,6 +28,8 @@ services:
       context: .
       dockerfile: account_system_passenger.dockerfile
     container_name: passenger
+    environment:
+      DATABASE_URL: jpostgresql://root:root@localhost:5502/passengers
     restart: always
     ports:
       - "8002:8000"
@@ -33,6 +39,8 @@ services:
       context: .
       dockerfile: account_system_driver.dockerfile
     container_name: driver
+    environment:
+      DATABASE_URL: jpostgresql://root:root@localhost:5501/drivers
     restart: always
     ports:
       - "8003:8000"
@@ -55,3 +63,41 @@ services:
     ports:
       - "8005:8000"
 
+  postgres-passengers:
+    image: postgres:15.5
+    container_name: passengers-db
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: passengers
+    ports:
+      - "5502:5432"
+    volumes:
+      - ./passenger_migrations/:/docker-entrypoint-initdb.d/
+  postgres-drivers:
+    image: postgres:15.5
+    container_name: drivers-db
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: drivers
+    ports:
+      - "5501:5432"
+    volumes:
+      - ./drivers_migrations/:/docker-entrypoint-initdb.d/
+  postgres-admins:
+    image: postgres:15.5
+    container_name: admins-db
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: admins
+    ports:
+      - "5503:5432"
+    volumes:
+      - ./admins_migrations/:/docker-entrypoint-initdb.d/
+
+volumes:
+  passengers-db:
+  drivers-db:
+  admins-db:

@@ -7,9 +7,9 @@ from tocken_generator.cryptography import Cryptography
 
 class PassengerController:
     _PASSENGERS = 'Пассажиры'
-    def __init__(self):
-        self.passengers = PassengerRepository()
-        self.admins = AdminRepository()
+    def __init__(self, passengers:PassengerRepository, admin_repository:AdminRepository):
+        self.passengers = passengers
+        self.admins = admin_repository
 
     def get_passengers(self, token:str) -> list:
         account = Cryptography().decrypt_token(token)

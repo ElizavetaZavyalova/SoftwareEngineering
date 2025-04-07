@@ -1,3 +1,5 @@
+import os
+
 import uvicorn
 from fastapi import FastAPI, Depends
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
@@ -16,7 +18,7 @@ app = FastAPI(
     docs_url="/docs"
 )
 redis_repository = PassengerRepositoryRedis()
-account_repository = PassengerRepositoryRDBMS()
+account_repository = PassengerRepositoryRDBMS(os.getenv("DATABASE_URL", "postgresql://root:root@localhost:5502/passengers"))
 controller = Controller(redis_repository, account_repository)
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
@@ -59,4 +61,4 @@ def delete_profile(token: str = Depends(oauth2_scheme)):
 
 
 if __name__ == '__main__':
-    uvicorn.run('passenger_register:app', host="0.0.0.0", port=8000)
+    uvicorn.run('passenger_register:app', port=8000)

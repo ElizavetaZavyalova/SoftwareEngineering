@@ -1,3 +1,5 @@
+import os
+
 import uvicorn
 from fastapi import FastAPI, Depends
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
@@ -6,6 +8,10 @@ from admin_sistem.controller.admin_controller import AdminController
 from admin_sistem.controller.driver_controller import DriverController
 from admin_sistem.controller.passenger_controller import PassengerController
 from admin_sistem.controller.trips_controller import TripsController
+from admin_sistem.repository.admin_repository import AdminRepository
+from admin_sistem.repository.driver_repository import DriverRepository
+from admin_sistem.repository.passenger_repository import PassengerRepository
+from admin_sistem.repository.trips_repository import TripsRepository
 from entity.driver import Driver
 from entity.passenger import Passenger
 from entity.trip import Trip
@@ -17,10 +23,15 @@ app = FastAPI(
     version="1.0",
     docs_url="/docs"
 )
-trips = TripsController()
-passengers = PassengerController()
-drivers = DriverController()
-admin = AdminController()
+trips_repository = TripsRepository()
+passengers_repository = PassengerRepository(url=os.getenv("DATABASE_PASSENGER_URL", "postgresql://root:root@localhost:5502/passsengers"))
+admins_repository = AdminRepository(url=os.getenv("DATABASE_ADMINS_URL", "postgresql://root:root@localhost:5503/admins"))
+drivers_repository = DriverRepository(url=os.getenv("DATABASE_DRIVER_URL", "postgresql://root:root@localhost:5501/drivers"))
+
+passengers = PassengerController(admin_repository=admins_repository, passengers=passengers_repository)
+drivers = DriverController(admin_repository=admins_repository, drivers=drivers_repository)
+admin = AdminController(admin_repository=admins_repository)
+trips = TripsController(trips=trips_repository, admin_repository=admins_repository)
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
@@ -84,4 +95,4 @@ def change_trip(trip: Trip, token: str = Depends(oauth2_scheme)):
 ##########################################################
 
 if __name__ == '__main__':
-    uvicorn.run('admin:app' , host="0.0.0.0", port=8000)
+    uvicorn.run('admin:app', host="0.0.0.0", port=8000)

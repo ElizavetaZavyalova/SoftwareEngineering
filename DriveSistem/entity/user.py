@@ -8,3 +8,6 @@ class User(Account):
     last_name: constr(pattern=r"^[A-Za-zА-Яа-яЁё]{2,50}$")
     patronymic: constr(pattern=r"^[A-Za-zА-Яа-яЁё]{2,50}$")
     phone_number: constr(pattern=r'^\+?\d{10,15}$')
+
+    class Config:
+        orm_mode = True

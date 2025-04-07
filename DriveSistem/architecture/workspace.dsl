@@ -71,9 +71,11 @@ workspace "Name" "Description" {
 
         driver ->  tripsSystem.addingTrip "Добавление новой поездки"
         tripsSystem.addingTrip -> tripsSystem.tripsDB "Получение информации о поездке"
+        tripsSystem.addingTrip -> accountSystem.driverDB "Получение инфлормации об аккаунте"
 
         passenger ->  tripsSystem.connectTrip "Подключение к поездке"
         tripsSystem.connectTrip -> tripsSystem.tripsDB "Получение информации о поездке"
+        tripsSystem.connectTrip -> accountSystem.passengerDB "Получение инфлормации об аккаунте"
 
 
     }

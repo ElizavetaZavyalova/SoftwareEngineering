@@ -7,8 +7,8 @@ from entity.account import Account
 
 class AdminController:
     _LOG_IN='Вход'
-    def __init__(self):
-        self.admins = AdminRepository()
+    def __init__(self, admin_repository: AdminRepository):
+        self.admins = admin_repository
 
     def login(self, account: Account):
         if self.admins.is_admin(account):

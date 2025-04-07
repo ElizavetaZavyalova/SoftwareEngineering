@@ -16,7 +16,7 @@ class Tags:
     _PASSWORD_RECOVERY = 'Востановление пароля'
 
 class Controller:
-    def __init__(self, redis: Redis, rdbms: RepositoryRDBMS):
+    def __init__(self, redis: Redis, rdbms):
         self.redis = redis
         self.rdbms = rdbms
 
