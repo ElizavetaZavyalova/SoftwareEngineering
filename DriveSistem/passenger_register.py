@@ -8,8 +8,8 @@ from account_sistem.controller.controller import Controller, Tags
 from account_sistem.passenger.passenger_repository.redis import PassengerRepositoryRedis
 from entity.account import Account
 from account_sistem.entity.email_confirmation import EmailConfirmation
-from entity.passenger import Passenger
 from account_sistem.passenger.passenger_repository.rdbms import PassengerRepositoryRDBMS
+from entity.passenger.rest.passenger import Passenger
 
 app = FastAPI(
     title="FastAPI Token Authentication",
@@ -18,11 +18,11 @@ app = FastAPI(
     docs_url="/docs"
 )
 redis_repository = PassengerRepositoryRedis()
-account_repository = PassengerRepositoryRDBMS(os.getenv("DATABASE_URL", "postgresql://root:root@localhost:5502/passengers"))
-controller = Controller(redis_repository, account_repository)
+account_repository = PassengerRepositoryRDBMS(url=os.getenv("DATABASE_PASSENGER_URL", "postgresql://root:root@localhost:5502/passengers"))
+controller = Controller(redis=redis_repository, rdbms=account_repository)
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-@app.post("/token",tags=[Tags._LOG_IN])
+@app.post("/token",tags=[Tags._LOG_IN], summary="Получение токена")
 def token(form_data: OAuth2PasswordRequestForm = Depends()):
     return controller.login(Account(email=form_data.username, password=form_data.password))
 # # # # # #
@@ -43,7 +43,7 @@ def forgot_password(account: Account):
 def change_password(email_confirmation: EmailConfirmation):
     return controller.change_password(email_confirmation=email_confirmation)
 
-@app.post("/passenger/login", tags=[Tags._LOG_IN])
+@app.post("/passenger/login", tags=[Tags._LOG_IN], summary="Вход в аккаунт(пассажир)")
 def login(account: Account):
     return controller.login(account=account)
 
@@ -61,4 +61,4 @@ def delete_profile(token: str = Depends(oauth2_scheme)):
 
 
 if __name__ == '__main__':
-    uvicorn.run('passenger_register:app', port=8000)
+    uvicorn.run('passenger_register:app', host=os.getenv("HOST", "127.0.0.1"), port=int(os.getenv("PORT", "8002")))

@@ -4,7 +4,6 @@ from entity.user import User
 
 class RepositoryRDBMS:
 
-
     def register_user(self, user: User) -> None:
         pass
 

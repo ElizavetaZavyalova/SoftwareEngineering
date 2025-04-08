@@ -5,7 +5,6 @@ from tocken_generator.cryptography import Cryptography
 from entity.account import Account
 from account_sistem.entity.email_confirmation import EmailConfirmation
 from account_sistem.repository.redis import Redis
-from account_sistem.repository.repositoryrdbms import RepositoryRDBMS
 from account_sistem.email.send_email import EmailSender
 
 

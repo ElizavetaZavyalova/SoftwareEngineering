@@ -1,3 +1,4 @@
+import os
 import secrets
 from jose import jwt
 
@@ -13,9 +14,10 @@ class Cryptography:
 
     def __init__(self):
         if not hasattr(self, '_initialized'):
-            self.key = secrets.token_hex(32)
-            print(self.key)
-            self.algorithm = "HS256"
+            self.key = os.getenv('TOKEN_SECRET', secrets.token_hex(32))
+            print('TOKEN_SECRET='+self.key)
+            self.algorithm = os.getenv('ALGO_SECRET', "HS256")
+            print('ALGO_SECRET=' + self.algorithm)
             self._initialized = True
 
     def generate_confirm_code(self) -> str:

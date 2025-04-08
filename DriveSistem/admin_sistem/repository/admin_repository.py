@@ -1,18 +1,10 @@
-from sqlalchemy import Column, Integer, String, create_engine
-from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
 from entity.account import Account
+from entity.admins.db.admin import Admin_DB
 
-Base = declarative_base()
-class Admin_DB(Base):
-    __tablename__ = 'admins_table'
-    id = Column(Integer, primary_key=True, index=True)
-    first_name=Column(String)
-    last_name=Column(String)
-    patronymic=Column(String)
-    phone = Column(String)
-    email = Column(String, unique=True)
-    password = Column(String,name='pass')
+
 class AdminRepository:
     def __init__(self, url: str):
         self.url = url

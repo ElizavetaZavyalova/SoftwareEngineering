@@ -1,20 +1,22 @@
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
 from entity.account import Account
-from entity.passenger import Passenger
-from proxy.fake import generate_passenger
+from entity.passenger.db.passenger import Passenger_DB, create_passenger
+from entity.passenger.rest.passenger import Passenger
 
 
 class PassengerRepository:
-    def __init__(self):
-        self.passengers = self.init_proxy()
-
-    def init_proxy(self) -> dict:
-        passengers = {p.email: p for p in [generate_passenger() for _ in range(5)]}
-        for email, driver in passengers.items():
-            print(email, driver, "\n")
-        return passengers
+    def __init__(self, url: str):
+        self.url = url
+        self.engine = create_engine(self.url)
+        self.SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
 
     def is_passenger(self, account: Account) -> bool:
-        passenger = self.passengers.get(account.email)
-        return passenger and account.email == passenger.email
+        with self.SessionLocal() as db:
+            user = db.query(Passenger_DB).filter(Passenger_DB.email == account.email).first()
+            return user and user.password == account.password
     def get_account(self, account: Account) -> Passenger | None:
-        return self.passengers.get(account.email)
+        with self.SessionLocal() as db:
+            user_db = db.query(Passenger_DB).filter(Passenger_DB.email == account.email).first()
+            return create_passenger(user_db)

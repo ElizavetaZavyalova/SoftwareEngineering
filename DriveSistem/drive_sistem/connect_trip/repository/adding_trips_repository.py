@@ -1,4 +1,4 @@
-from entity.passenger import Passenger
+from entity.passenger.rest.passenger import Passenger
 
 
 class AddingTripsRepository:

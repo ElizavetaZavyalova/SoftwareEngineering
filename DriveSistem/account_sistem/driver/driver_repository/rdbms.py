@@ -1,48 +1,10 @@
-from sqlalchemy import Column, String, Integer, create_engine
-from sqlalchemy.orm import declarative_base, sessionmaker, Session
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
 from account_sistem.repository.repositoryrdbms import RepositoryRDBMS
 from entity.account import Account
-from entity.driver import Driver
-
-Base = declarative_base()
-class Driver_DB(Base):
-    __tablename__ = 'drivers_table'
-    id = Column(Integer, primary_key=True, index=True)
-    first_name=Column(String)
-    last_name=Column(String)
-    patronymic=Column(String)
-    phone = Column(String)
-    email = Column(String, unique=True)
-    password = Column(String,name='pass')
-    requisites= Column(String)
-    car_number = Column(String)
-
-
-def create_model(model: Driver) -> Driver_DB:
-    if model is None:
-        return None
-    return Driver_DB(first_name=model.first_name,
-                        last_name=model.last_name,
-                        patronymic=model.patronymic,
-                        phone=model.phone_number,
-                        email=model.email,
-                        password=model.password,
-                        requisites=model.requisites,
-                        car_number=model.car_number)
-
-
-def create_driver(model: Driver_DB) -> Driver:
-    if model is None:
-        return None
-    return Driver(first_name=model.first_name,
-                        last_name=model.last_name,
-                        patronymic=model.patronymic,
-                        phone_number=model.phone,
-                        email=model.email,
-                        password=model.password,
-                        requisites = model.requisites,
-                        car_number = model.car_number)
+from entity.driver.db.driver import Driver_DB, create_driver, create_model, update_model
+from entity.driver.rest.driver import Driver
 
 
 class DriverRepositoryRDBMS(RepositoryRDBMS):
@@ -76,7 +38,7 @@ class DriverRepositoryRDBMS(RepositoryRDBMS):
                 user_db = db.query(Driver_DB).filter(Driver_DB.email == account.email).first()
                 if not user:
                     return False
-                self.update_model(user_db, user)
+                update_model(user_db, user)
                 db.commit()
                 return True
         if self.find_user(user.email):
@@ -84,17 +46,6 @@ class DriverRepositoryRDBMS(RepositoryRDBMS):
         self._delete_user_by_email(account.email)
         self._add_user(user)
         return True
-
-    def update_model(self, model: Driver_DB, user: Driver) -> bool:
-        model.first_name = user.first_name
-        model.last_name = user.last_name
-        model.patronymic = user.patronymic
-        model.phone = user.phone_number
-        model.email = user.email
-        model.car_number = user.car_number
-        model.requisites = user.requisites
-        model.password = user.password
-        return model
 
     def _delete_user_by_email(self, email: str) -> bool:
         # удалить пользователя если он существует((((((((((((((((((((((((

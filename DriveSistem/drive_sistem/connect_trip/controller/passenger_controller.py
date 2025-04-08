@@ -7,8 +7,8 @@ from tocken_generator.cryptography import Cryptography
 
 class PassengerController:
     _LOG_IN='Вход'
-    def __init__(self):
-        self.passengers = PassengerRepository()
+    def __init__(self, passenger_repository: PassengerRepository):
+        self.passengers = passenger_repository
 
     def login(self, account: Account):
         if self.passengers.is_passenger(account):

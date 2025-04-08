@@ -1,20 +1,21 @@
+from sqlalchemy import  create_engine
+from sqlalchemy.orm import sessionmaker
+
 from entity.account import Account
-from entity.driver import Driver
-from proxy.fake import generate_driver
+from entity.driver.db.driver import Driver_DB, create_driver
+from entity.driver.rest.driver import Driver
 
 class DriverRepository:
-    def __init__(self):
-        self.drivers = self.init_proxy()
-
-    def init_proxy(self) -> dict:
-        drivers = {p.email: p for p in [generate_driver() for _ in range(5)]}
-        for email, driver in drivers.items():
-            print(email, driver, "\n")
-        return drivers
+    def __init__(self, url: str):
+        self.url = url
+        self.engine = create_engine(self.url)
+        self.SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
 
     def is_driver(self, account: Account) -> bool:
-        driver = self.drivers.get(account.email)
-        return driver and account.email == driver.email
-
+        with self.SessionLocal() as db:
+            user = db.query(Driver_DB).filter(Driver_DB.email == account.email).first()
+            return user and user.password == account.password
     def get_account(self, account: Account) -> Driver | None:
-        return self.drivers.get(account.email)
+        with self.SessionLocal() as db:
+            user_db = db.query(Driver_DB).filter(Driver_DB.email == account.email).first()
+            return create_driver(user_db)

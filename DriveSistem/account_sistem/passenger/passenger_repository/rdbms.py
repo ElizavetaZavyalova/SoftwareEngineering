@@ -1,51 +1,16 @@
-from sqlalchemy import Column, String, Integer, create_engine
-from sqlalchemy.orm import declarative_base, sessionmaker, Session
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
 from account_sistem.repository.repositoryrdbms import RepositoryRDBMS
 from entity.account import Account
-from entity.passenger import Passenger
-
-Base = declarative_base()
-class Passenger_DB(Base):
-    __tablename__ = 'passengers_table'
-    id = Column(Integer, primary_key=True, index=True)
-    first_name=Column(String)
-    last_name=Column(String)
-    patronymic=Column(String)
-    phone = Column(String)
-    email = Column(String, unique=True)
-    password = Column(String,name='pass')
-    home_address = Column(String)
-
-
-def create_model(model: Passenger) -> Passenger_DB:
-    if model is None:
-        return None
-    return Passenger_DB(first_name=model.first_name,
-                        last_name=model.last_name,
-                        patronymic=model.patronymic,
-                        phone=model.phone_number,
-                        email=model.email,
-                        password=model.password,
-                        home_address=model.home_address)
-
-
-def create_passenger(model: Passenger_DB) -> Passenger:
-    if model is None:
-        return None
-    return Passenger(first_name=model.first_name,
-                        last_name=model.last_name,
-                        patronymic=model.patronymic,
-                        phone_number=model.phone,
-                        email=model.email,
-                        password=model.password,
-                        home_address=model.home_address)
+from entity.passenger.db.passenger import Passenger_DB, create_passenger, create_model
+from entity.passenger.rest.passenger import Passenger
 
 
 class PassengerRepositoryRDBMS(RepositoryRDBMS):
     def __init__(self, url: str):
         self.url = url
-        self.engine = create_engine(self.url)
+        self.engine = create_engine(url)
         self.SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
 
     def register_user(self, user: Passenger) -> None:
@@ -81,16 +46,6 @@ class PassengerRepositoryRDBMS(RepositoryRDBMS):
         self._delete_user_by_email(account.email)
         self._add_user(user)
         return True
-
-    def update_model(self, model: Passenger_DB, user: Passenger) -> bool:
-        model.first_name = user.first_name
-        model.last_name = user.last_name
-        model.patronymic = user.patronymic
-        model.phone = user.phone_number
-        model.email = user.email
-        model.home_address = user.home_address
-        model.password = user.password
-        return model
 
     def _delete_user_by_email(self, email: str) -> bool:
         # удалить пользователя если он существует((((((((((((((((((((((((

@@ -1,5 +1,5 @@
-from entity.driver import Driver
-from entity.trip_description import TripDescription
+from entity.driver.rest.driver import Driver
+from entity.trip.trip_description import TripDescription
 
 
 class AddingTripsRepository:

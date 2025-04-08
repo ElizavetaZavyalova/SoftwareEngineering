@@ -16,12 +16,20 @@ services:
       dockerfile: admin_system.dockerfile
     container_name: admin
     environment:
-      DATABASE_PASSENGER_URL: postgresql://root:root@localhost:5502/passengers
-      DATABASE_ADMINS_URL: postgresql://root:root@localhost:5503/admins
-      DATABASE_DRIVER_URL: postgresql://root:root@localhost:5501/drivers
+      DATABASE_PASSENGER_URL: postgresql://root:root@postgres-passengers:5502/passengers
+      DATABASE_ADMINS_URL: postgresql://root:root@postgres-admins:5503/admins
+      DATABASE_DRIVER_URL: postgresql://root:root@postgres-drivers:5501/drivers
+      TOKEN_SECRET: 6916734b2465caf22d851d987cb36b739fb10257a0b79166ea0209da3edbfea6
+      ALGO_SECRET: HS256
+      HOST: 0.0.0.0
+      PORT: 8000
     restart: always
     ports:
       - "8001:8000"
+    depends_on:
+      - postgres-admins
+      - postgres-drivers
+      - postgres-passengers
 
   passenger:
     build:
@@ -29,10 +37,16 @@ services:
       dockerfile: account_system_passenger.dockerfile
     container_name: passenger
     environment:
-      DATABASE_URL: jpostgresql://root:root@localhost:5502/passengers
+      DATABASE_PASSENGER_URL: postgresql://root:root@postgres-passengers:5502/passengers
+      TOKEN_SECRET: 6916734b2465caf22d851d987cb36b739fb10257a0b79166ea0209da3edbfea6
+      ALGO_SECRET: HS256
+      HOST: 0.0.0.0
+      PORT: 8000
     restart: always
     ports:
       - "8002:8000"
+    depends_on:
+      - postgres-passengers
 
   driver:
     build:
@@ -40,28 +54,50 @@ services:
       dockerfile: account_system_driver.dockerfile
     container_name: driver
     environment:
-      DATABASE_URL: jpostgresql://root:root@localhost:5501/drivers
+      DATABASE_DRIVER_URL: postgresql://root:root@postgres-drivers:5501/drivers
+      TOKEN_SECRET: 6916734b2465caf22d851d987cb36b739fb10257a0b79166ea0209da3edbfea6
+      ALGO_SECRET: HS256
+      HOST: 0.0.0.0
+      PORT: 8000
     restart: always
     ports:
       - "8003:8000"
+    depends_on:
+      - postgres-drivers
 
   adding_trips:
     build:
       context: .
       dockerfile: driver_system_adding_trip.dockerfile
     container_name: adding_trips
+    environment:
+      DATABASE_DRIVER_URL: postgresql://root:root@postgres-drivers:5501/drivers
+      TOKEN_SECRET: 6916734b2465caf22d851d987cb36b739fb10257a0b79166ea0209da3edbfea6
+      ALGO_SECRET: HS256
+      HOST: 0.0.0.0
+      PORT: 8000
     restart: always
     ports:
       - "8004:8000"
+    depends_on:
+      - postgres-drivers
 
   connect_trips:
     build:
       context: .
       dockerfile: driver_system_connect_trip.dockerfile
     container_name: connect_trips
+    environment:
+      DATABASE_PASSENGER_URL: postgresql://root:root@postgres-passengers:5502/passengers
+      TOKEN_SECRET: 6916734b2465caf22d851d987cb36b739fb10257a0b79166ea0209da3edbfea6
+      ALGO_SECRET: HS256
+      HOST: 0.0.0.0
+      PORT: 8000
     restart: always
     ports:
       - "8005:8000"
+    depends_on:
+      - postgres-passengers
 
   postgres-passengers:
     image: postgres:15.5
