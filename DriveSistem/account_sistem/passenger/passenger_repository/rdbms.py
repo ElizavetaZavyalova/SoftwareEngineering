@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker
 
 from account_sistem.repository.repositoryrdbms import RepositoryRDBMS
 from entity.account import Account
-from entity.passenger.db.passenger import Passenger_DB, create_passenger, create_model
+from entity.passenger.db.passenger import Passenger_DB, create_passenger, create_model, update_model
 from entity.passenger.rest.passenger import Passenger
 
 
@@ -31,22 +31,20 @@ class PassengerRepositoryRDBMS(RepositoryRDBMS):
         with self.SessionLocal() as db:
             user = db.query(Passenger_DB).filter(Passenger_DB.email == email).first()
             return user is not None
-
     def update_profile(self, account: Account, user: Passenger) -> bool:
         if account.email == user.email:
-            with self.SessionLocal() as db:
-                user_db = db.query(Passenger_DB).filter(Passenger_DB.email == account.email).first()
-                if not user:
-                    return False
-                self.update_model(user_db, user)
-                db.commit()
-                return True
+            return self._update_profile(account, user)
         if self.find_user(user.email):
             return False
-        self._delete_user_by_email(account.email)
-        self._add_user(user)
-        return True
-
+        return self._update_profile(account, user)
+    def _update_profile(self, account: Account, user: Passenger):
+        with self.SessionLocal() as db:
+            user_db = db.query(Passenger_DB).filter(Passenger_DB.email == account.email).first()
+            if not user:
+                return False
+            update_model(user_db, user)
+            db.commit()
+            return True
     def _delete_user_by_email(self, email: str) -> bool:
         # удалить пользователя если он существует((((((((((((((((((((((((
         with self.SessionLocal() as db:

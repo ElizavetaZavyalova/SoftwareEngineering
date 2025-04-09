@@ -37,13 +37,13 @@ class ConnectTripsController:
         account = Cryptography().decrypt_token(token)
         passenger = self.passengers.get_account(account)
         if passenger:
-            return self.routes.get_trips(passenger=passenger)
+            return self.trips.get_trips(passenger=passenger)
         raise HTTPException(status_code=400, detail="Incorrect username or password")
 
     def get_connected_trips(self,token: str):
         account = Cryptography().decrypt_token(token)
         passenger = self.passengers.get_account(account)
         if passenger:
-            return self.routes. get_connected_trips(passenger=passenger)
+            return self.trips.get_connected_trips(passenger=passenger)
         raise HTTPException(status_code=400, detail="Incorrect username or password")
 

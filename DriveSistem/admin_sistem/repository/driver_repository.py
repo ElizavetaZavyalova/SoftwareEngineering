@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from entity.driver.db.driver import Driver_DB, create_driver
+from entity.driver.db.driver import Driver_DB, create_driver, update_model
 from entity.driver.rest.driver import Driver
 
 
@@ -32,5 +32,5 @@ class DriverRepository:
         with self.SessionLocal() as db:
             driver_db = db.query(Driver_DB).filter(Driver_DB.id == id).first()
             if driver:
-                self.update_model(driver_db, driver)
+                update_model(driver_db, driver)
                 db.commit()

@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -15,11 +16,11 @@ class DriverRepositoryRDBMS(RepositoryRDBMS):
 
     def register_user(self, user: Driver) -> None:
         # Если нет user c email то добавить иначе ошибка(((((((((((((((((((((
-        self._add_user(user)
+        return self._add_user(user)
 
     def _add_user(self, user: Driver) -> None:
         if self.find_user(user.email):
-            raise ValueError(f"Пользователь с email {user.email} уже зарегистрирован.")
+            raise HTTPException(status_code=400, detail=f"Пользователь с email {user.email} уже зарегистрирован.")
         db_user = create_model(user)
         with self.SessionLocal() as db:
             db.add(db_user)
@@ -34,18 +35,18 @@ class DriverRepositoryRDBMS(RepositoryRDBMS):
 
     def update_profile(self, account: Account, user: Driver) -> bool:
         if account.email == user.email:
-            with self.SessionLocal() as db:
-                user_db = db.query(Driver_DB).filter(Driver_DB.email == account.email).first()
-                if not user:
-                    return False
-                update_model(user_db, user)
-                db.commit()
-                return True
+            return self._update_profile(account, user)
         if self.find_user(user.email):
             return False
-        self._delete_user_by_email(account.email)
-        self._add_user(user)
-        return True
+        return self._update_profile(account, user)
+    def _update_profile(self, account: Account, user: Driver):
+        with self.SessionLocal() as db:
+            user_db = db.query(Driver_DB).filter(Driver_DB.email == account.email).first()
+            if not user:
+                return False
+            update_model(user_db, user)
+            db.commit()
+            return True
 
     def _delete_user_by_email(self, email: str) -> bool:
         # удалить пользователя если он существует((((((((((((((((((((((((
