@@ -1,14 +1,22 @@
 CREATE TABLE IF NOT EXISTS passengers (
     id SERIAL PRIMARY KEY,
-    first_name VARCHAR(255) NOT NULL COMMENT 'Имя',
-    last_name VARCHAR(255) NOT NULL COMMENT 'Фамилия',
-    patronymic VARCHAR(255) COMMENT 'Отчество',
-    email VARCHAR(255) UNIQUE NOT NULL COMMENT 'Email',
-    pass VARCHAR(255) NOT NULL COMMENT 'Пароль',
-    home_address VARCHAR(255) COMMENT 'Домашний адрес',
-    phone VARCHAR(255) NOT NULL COMMENT 'Номер телефона'
+    first_name TEXT NOT NULL,
+    last_name TEXT NOT NULL,
+    patronymic TEXT,
+    email TEXT UNIQUE NOT NULL,
+    pass TEXT NOT NULL,
+    home_address TEXT,
+    phone TEXT NOT NULL
 );
 COMMENT ON TABLE passengers IS 'Пассажиры';
+
+COMMENT ON COLUMN passengers.first_name IS 'Имя';
+COMMENT ON COLUMN passengers.last_name IS 'Фамилия';
+COMMENT ON COLUMN passengers.patronymic IS 'Отчество';
+COMMENT ON COLUMN passengers.email IS 'Email';
+COMMENT ON COLUMN passengers.pass IS 'Пароль';
+COMMENT ON COLUMN passengers.home_address IS 'Домашний адрес';
+COMMENT ON COLUMN passengers.phone IS 'Номер телефона';
 
 INSERT INTO passengers (first_name, last_name, patronymic, email, pass, home_address, phone) VALUES
 ('Иван', 'Иванов', 'Иванович', 'ivanov@example.com', 'pass1234', 'г. Москва, ул. Ленина, д. 10', '+79161234567'),

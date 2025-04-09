@@ -1,15 +1,24 @@
-CREATE TABLE IF NOT EXISTS drivers(
+CREATE TABLE IF NOT EXISTS drivers (
     id SERIAL PRIMARY KEY,
-    first_name VARCHAR(255) NOT NULL COMMENT 'Имя',
-    last_name VARCHAR(255) NOT NULL COMMENT 'Фамилия',
-    patronymic VARCHAR(255) COMMENT 'Отчество',
-    email VARCHAR(255) UNIQUE NOT NULL COMMENT 'Email',
-    pass VARCHAR(255) NOT NULL COMMENT 'Пароль',
-    requisites VARCHAR(255) COMMENT 'Счет оплаты',
-    car_number VARCHAR(255) COMMENT 'Номер машины',
-    phone VARCHAR(255) NOT NULL COMMENT 'Номер телефона'
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
+    patronymic VARCHAR(255),
+    email VARCHAR(255) UNIQUE NOT NULL,
+    pass VARCHAR(255) NOT NULL,
+    requisites VARCHAR(255),
+    car_number VARCHAR(255),
+    phone VARCHAR(255) NOT NULL
 );
 COMMENT ON TABLE drivers IS 'Водители';
+
+COMMENT ON COLUMN drivers.first_name IS 'Имя';
+COMMENT ON COLUMN drivers.last_name IS 'Фамилия';
+COMMENT ON COLUMN drivers.patronymic IS 'Отчество';
+COMMENT ON COLUMN drivers.email IS 'Email';
+COMMENT ON COLUMN drivers.pass IS 'Пароль';
+COMMENT ON COLUMN drivers.requisites IS 'Счет оплаты';
+COMMENT ON COLUMN drivers.car_number IS 'Номер машины';
+COMMENT ON COLUMN drivers.phone IS 'Номер телефона';
 
 INSERT INTO drivers (first_name, last_name, patronymic, email, pass, requisites, car_number, phone) VALUES
 ('Сергей', 'Михайлов', 'Анатольевич', 'mihailov@example.com', 'driver123', 'Счет №40817810099910004312', 'А123ВС77', '+79991234567'),

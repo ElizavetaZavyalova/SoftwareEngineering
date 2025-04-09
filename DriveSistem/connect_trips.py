@@ -29,7 +29,7 @@ def token(form_data: OAuth2PasswordRequestForm = Depends()):
 def connect_to_trip(id:int, token: str = Depends(oauth2_scheme)):
     return routes.connect_to_trip(id=id, token=token)
 
-@app.delete("/passenger/trip/{id}/cancel", tags=[ConnectTripsController._CONNECTING_TRIPS], summary="Отключение текущего пассажира к поездки по id")
+@app.delete("/passenger/trip/{id}/cancel", tags=[ConnectTripsController._CONNECTING_TRIPS], summary="Отключение текущего пассажира от поездки по id")
 def cancel_trip(id:int, token: str = Depends(oauth2_scheme)):
     return routes.cancel_trip(id=id, token=token)
 

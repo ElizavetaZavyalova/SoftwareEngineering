@@ -6,7 +6,8 @@ from tocken_generator.cryptography import Cryptography
 
 
 class PassengerController:
-    _LOG_IN='Вход'
+    _LOG_IN = 'Вход'
+
     def __init__(self, passenger_repository: PassengerRepository):
         self.passengers = passenger_repository
 
