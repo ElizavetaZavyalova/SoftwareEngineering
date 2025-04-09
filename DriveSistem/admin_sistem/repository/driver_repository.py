@@ -13,8 +13,7 @@ class DriverRepository:
 
     def get_drivers(self) -> list:
         with self.SessionLocal() as db:
-            drivers = db.query(Driver_DB).all()
-            return list(map(create_driver, drivers))
+            return [(driver.id, create_driver(driver)) for driver in db.query(Driver_DB).all()]
 
     def delete_driver(self, id: int):
         with self.SessionLocal() as db:
@@ -28,7 +27,7 @@ class DriverRepository:
             if driver:
                 return create_driver(driver)
 
-    def change_driver(self, driver:Driver):
+    def change_driver(self,id:int, driver:Driver):
         with self.SessionLocal() as db:
             driver_db = db.query(Driver_DB).filter(Driver_DB.id == id).first()
             if driver:

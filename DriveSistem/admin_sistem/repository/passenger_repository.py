@@ -13,8 +13,7 @@ class PassengerRepository:
 
     def get_passengers(self) -> list:
         with self.SessionLocal() as db:
-            passengers = db.query(Passenger_DB).all()
-            return list(map(create_passenger, passengers))
+            return [(passenger.id, create_passenger(passenger)) for passenger in db.query(Passenger_DB).all()]
 
     def delete_passenger(self, id: int):
         with self.SessionLocal() as db:
@@ -28,7 +27,7 @@ class PassengerRepository:
             if passenger:
                 return create_passenger(passenger)
 
-    def change_passenger(self, passenger:Passenger):
+    def change_passenger(self,id:int, passenger:Passenger):
         with self.SessionLocal() as db:
             passenger_db = db.query(Passenger_DB).filter(Passenger_DB.id == id).first()
             if passenger:

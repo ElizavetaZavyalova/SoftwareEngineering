@@ -29,9 +29,9 @@ class PassengerController:
             return self.passengers.get_passenger(id)
         raise HTTPException(status_code=400, detail="Incorrect username or password")
 
-    def change_passenger(self, token:str, passenger):
+    def change_passenger(self,id:int, token:str, passenger):
         account = Cryptography().decrypt_token(token)
         if self.admins.is_admin(account):
-            return self.passengers.change_passenger(passenger)
+            return self.passengers.change_passenger(id=id,passenger=passenger)
         raise HTTPException(status_code=400, detail="Incorrect username or password")
 

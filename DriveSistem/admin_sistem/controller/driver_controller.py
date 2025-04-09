@@ -28,7 +28,7 @@ class DriverController:
             return self.drivers.get_driver(id)
         raise HTTPException(status_code=400, detail="Incorrect username or password")
 
-    def change_driver(self, token:str, driver):
+    def change_driver(self,id:int, token:str, driver):
         account = Cryptography().decrypt_token(token)
         if self.admins.is_admin(account):
             return self.drivers.change_driver(driver)

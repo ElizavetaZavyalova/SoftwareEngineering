@@ -29,8 +29,8 @@ class TripsController:
             return self.trips.get_trip(id)
         raise HTTPException(status_code=400, detail="Incorrect username or password")
 
-    def change_trip(self, token:str, trip):
+    def change_trip(self,id:int, token:str, trip):
         account = Cryptography().decrypt_token(token)
         if self.admins.is_admin(account):
-            return self.trips.change_trip(trip)
+            return self.trips.change_trip(id=id,trip=trip)
         raise HTTPException(status_code=400, detail="Incorrect username or password")
