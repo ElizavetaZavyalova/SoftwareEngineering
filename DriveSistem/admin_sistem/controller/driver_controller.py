@@ -2,7 +2,7 @@ from fastapi import HTTPException
 
 from admin_sistem.repository.admin_repository import AdminRepository
 from admin_sistem.repository.driver_repository import DriverRepository
-from tocken_generator.cryptography import Cryptography
+from libs.tocken_generator.cryptography import Cryptography
 
 
 class DriverController:

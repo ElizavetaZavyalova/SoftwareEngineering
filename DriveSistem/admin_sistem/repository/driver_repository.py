@@ -1,8 +1,8 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from entity.driver.db.driver import Driver_DB, create_driver, update_model
-from entity.driver.rest.driver import Driver
+from libs.entity.driver.db.driver import Driver_DB, create_driver, update_model
+from libs.entity.driver.rest.driver import Driver
 
 
 class DriverRepository:

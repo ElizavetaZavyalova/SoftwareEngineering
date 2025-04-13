@@ -2,7 +2,7 @@ from fastapi import HTTPException
 
 from admin_sistem.repository.admin_repository import AdminRepository
 from admin_sistem.repository.trips_repository import TripsRepository
-from tocken_generator.cryptography import Cryptography
+from libs.tocken_generator.cryptography import Cryptography
 
 
 class TripsController:

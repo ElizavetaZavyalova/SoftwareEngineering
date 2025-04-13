@@ -2,7 +2,7 @@ from fastapi import HTTPException
 
 from admin_sistem.repository.admin_repository import AdminRepository
 from admin_sistem.repository.passenger_repository import PassengerRepository
-from tocken_generator.cryptography import Cryptography
+from libs.tocken_generator.cryptography import Cryptography
 
 
 class PassengerController:
