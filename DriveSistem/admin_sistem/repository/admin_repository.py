@@ -11,7 +11,7 @@ class AdminRepository:
         self.engine = create_engine(self.url)
         self.SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
 
-    def is_admin(self, admin: Account) -> bool:
+    def is_admin(self, account: Account) -> bool:
         with self.SessionLocal() as db:
-            admin = db.query(Admin_DB).filter(Admin_DB.email == admin.email).first()
-            return admin and admin.password == admin.password
+            admin = db.query(Admin_DB).filter(Admin_DB.email == account.email).first()
+            return admin and admin.password == account.password
