@@ -12,6 +12,7 @@ class PassengerController:
         self.passengers = passenger_repository
 
     def login(self, account: Account):
+        account.password = Cryptography().hash_password(password=account.password)
         if self.passengers.is_passenger(account):
             token = Cryptography().generate_token(account=account)
             return token

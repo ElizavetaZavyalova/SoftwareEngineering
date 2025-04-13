@@ -15,7 +15,7 @@ COMMENT ON COLUMN admins.patronymic IS 'Отчество';
 COMMENT ON COLUMN admins.email IS 'Email';
 COMMENT ON COLUMN admins.pass IS 'Пароль';
 COMMENT ON COLUMN admins.phone IS 'Номер телефона';
-
+-- admin:12w/m81itNBaKxNG/AZzaB5lMPiIWPq
 INSERT INTO admins (first_name, last_name, patronymic, email, pass, phone) VALUES
-('Админ', 'Админов', 'Админович', 'admin@admin.com', 'admin', '+79990001122');
+('Админ', 'Админов', 'Админович', 'admin@admin.com', '12w/m81itNBaKxNG/AZzaB5lMPiIWPq', '+79990001122');
 CREATE INDEX IF NOT EXISTS idx_admins_email ON admins (email);

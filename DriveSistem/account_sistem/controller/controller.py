@@ -1,5 +1,6 @@
 from fastapi import HTTPException
 
+from account_sistem.repository.repositoryrdbms import RepositoryRDBMS
 from entity.user import User
 from tocken_generator.cryptography import Cryptography
 from entity.account import Account
@@ -14,12 +15,14 @@ class Tags:
     _PROFILE_SETTINGS = 'Настройки профиля'
     _PASSWORD_RECOVERY = 'Востановление пароля'
 
+
 class Controller:
-    def __init__(self, redis: Redis, rdbms):
+    def __init__(self, redis: Redis, rdbms: RepositoryRDBMS):
         self.redis = redis
         self.rdbms = rdbms
 
     def register_user(self, user: User):
+        user.password = Cryptography().hash_password(password=user.password)
         if not self.rdbms.find_user(email=user.email):
             confirm_code = Cryptography().generate_confirm_code()
             email_confirmation = EmailConfirmation(confirm_code=confirm_code, email=user.email)
@@ -28,7 +31,7 @@ class Controller:
             return {'status': 'success', 'message': f'Check your email {user.email}'}
         raise HTTPException(status_code=400, detail='Passenger already exists')
 
-    def confirm_email_passenger(self, email_confirmation: EmailConfirmation):
+    def confirm_email(self, email_confirmation: EmailConfirmation):
         user = self.redis.get_user(email_confirmation=email_confirmation)
         if user:
             self.rdbms.register_user(user=user)
@@ -39,6 +42,7 @@ class Controller:
     def forgot_password(self, account: Account):
         user = self.rdbms.get_user_by_email(email=account.email)
         if user:
+            user.password = Cryptography().hash_password(password=account.password)
             confirm_code = Cryptography().generate_confirm_code()
             email_confirmation = EmailConfirmation(confirm_code=confirm_code, email=account.email)
             self.redis.register_user(email_confirmation=email_confirmation, user=user)
@@ -54,6 +58,7 @@ class Controller:
         raise HTTPException(status_code=400, detail='Invalid confirmation code or passenger not found')
 
     def login(self, account: Account):
+        account.password = Cryptography().hash_password(password=account.password)
         if self.rdbms.find_account(account=account):
             token = Cryptography().generate_token(account=account)
             return token
@@ -68,6 +73,7 @@ class Controller:
 
     def change_user_profile(self, user: User, token: str):
         account = Cryptography().decrypt_token(token)
+        user.password = Cryptography().hash_password(password=user.password)
         if self.rdbms.update_profile(account=account, user=user):
             return {'status': 'success', 'message': f'Profile was change {repr(user)}'}
         raise HTTPException(status_code=400, detail=f"{user.email} is already use")

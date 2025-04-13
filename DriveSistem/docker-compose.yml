@@ -35,6 +35,7 @@ services:
       DATABASE_DRIVER_URL: postgresql://root:root@drivers-db:5432/drivers
       TOKEN_SECRET: 6916734b2465caf22d851d987cb36b739fb10257a0b79166ea0209da3edbfea6
       ALGO_SECRET: HS256
+      SALT_SECRET:  $2b$12$abcdefghijklmnopqrstuu
       HOST: 0.0.0.0
       PORT: 8000
     restart: always
@@ -54,6 +55,7 @@ services:
       DATABASE_PASSENGER_URL: postgresql://root:root@passengers-db:5432/passengers
       TOKEN_SECRET: 6916734b2465caf22d851d987cb36b739fb10257a0b79166ea0209da3edbfea6
       ALGO_SECRET: HS256
+      SALT_SECRET:  $2b$12$abcdefghijklmnopqrstuu
       HOST: 0.0.0.0
       PORT: 8000
     restart: always
@@ -71,6 +73,7 @@ services:
       DATABASE_DRIVER_URL: postgresql://root:root@drivers-db:5432/drivers
       TOKEN_SECRET: 6916734b2465caf22d851d987cb36b739fb10257a0b79166ea0209da3edbfea6
       ALGO_SECRET: HS256
+      SALT_SECRET:  $2b$12$abcdefghijklmnopqrstuu
       HOST: 0.0.0.0
       PORT: 8000
     restart: always
@@ -88,6 +91,7 @@ services:
       DATABASE_DRIVER_URL: postgresql://root:root@drivers-db:5432/drivers
       TOKEN_SECRET: 6916734b2465caf22d851d987cb36b739fb10257a0b79166ea0209da3edbfea6
       ALGO_SECRET: HS256
+      SALT_SECRET:  $2b$12$abcdefghijklmnopqrstuu
       HOST: 0.0.0.0
       PORT: 8000
     restart: always
@@ -105,6 +109,7 @@ services:
       DATABASE_PASSENGER_URL: postgresql://root:root@passengers-db:5432/passengers
       TOKEN_SECRET: 6916734b2465caf22d851d987cb36b739fb10257a0b79166ea0209da3edbfea6
       ALGO_SECRET: HS256
+      SALT_SECRET: $2b$12$abcdefghijklmnopqrstuu
       HOST: 0.0.0.0
       PORT: 8000
     restart: always

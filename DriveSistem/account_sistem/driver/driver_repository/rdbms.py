@@ -39,6 +39,7 @@ class DriverRepositoryRDBMS(RepositoryRDBMS):
         if self.find_user(user.email):
             return False
         return self._update_profile(account, user)
+
     def _update_profile(self, account: Account, user: Driver):
         with self.SessionLocal() as db:
             user_db = db.query(Driver_DB).filter(Driver_DB.email == account.email).first()

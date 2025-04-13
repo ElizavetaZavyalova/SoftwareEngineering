@@ -11,6 +11,7 @@ class DriverController:
         self.drivers = driver_repository
 
     def login(self, account: Account):
+        account.password = Cryptography().hash_password(password=account.password)
         if self.drivers.is_driver(account):
             token = Cryptography().generate_token(account=account)
             return token

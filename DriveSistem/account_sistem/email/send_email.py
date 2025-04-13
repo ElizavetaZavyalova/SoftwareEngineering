@@ -18,13 +18,15 @@ class EmailSender:
             print(f"Initializing SendEmail with SMTP server: {self.smtp_server} and port: {self.port}")
 
     def send_approve_register_email(self, email_confirmation: EmailConfirmation):
-        print("Sending email: " + email_confirmation.email + " approve_register_code: " + email_confirmation.confirm_code)
+        print(
+            "Sending email: " + email_confirmation.email + " approve_register_code: " + email_confirmation.confirm_code)
 
     def send_approve_chenge_password_email(self, email_confirmation: EmailConfirmation):
-        print("Sending email: " + email_confirmation.email + " approve_change_password: " + email_confirmation.confirm_code)
+        print(
+            "Sending email: " + email_confirmation.email + " approve_change_password: " + email_confirmation.confirm_code)
 
     def send_welcome_email(self, user: User):
         print("Sending email: " + user.email + " welcome " + user.first_name)
 
-    def send_change_password_email(self, user:User):
+    def send_change_password_email(self, user: User):
         print("Sending email: " + user.email + " change_password_for: " + user.first_name)

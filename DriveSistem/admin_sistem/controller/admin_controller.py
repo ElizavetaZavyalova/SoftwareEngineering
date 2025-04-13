@@ -6,11 +6,13 @@ from entity.account import Account
 
 
 class AdminController:
-    _LOG_IN='Вход'
+    _LOG_IN = 'Вход'
+
     def __init__(self, admin_repository: AdminRepository):
         self.admins = admin_repository
 
     def login(self, account: Account):
+        account.password = Cryptography().hash_password(password=account.password)
         if self.admins.is_admin(account):
             token = Cryptography().generate_token(account=account)
             return token
