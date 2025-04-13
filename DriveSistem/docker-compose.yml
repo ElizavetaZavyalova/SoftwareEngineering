@@ -23,6 +23,8 @@ services:
       - driver
       - adding_trips
       - connect_trips
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost/health" ]
 
   admin:
     build:
