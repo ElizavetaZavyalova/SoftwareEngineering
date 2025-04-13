@@ -3,6 +3,7 @@ import os
 import uvicorn
 from fastapi import FastAPI, Depends
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
+from starlette.responses import JSONResponse
 
 from account_sistem.controller.controller import Controller, Tags
 from account_sistem.passenger.passenger_repository.redis import PassengerRepositoryRedis
@@ -24,7 +25,9 @@ controller = Controller(redis=redis_repository, rdbms=account_repository)
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-
+@app.get("/health", tags=["Health"])
+def healthcheck():
+    return JSONResponse(content={"status": "ok"})
 @app.post("/token", tags=[Tags._LOG_IN], summary="Получение токена")
 def token(form_data: OAuth2PasswordRequestForm = Depends()):
     return controller.login(Account(email=form_data.username, password=form_data.password))

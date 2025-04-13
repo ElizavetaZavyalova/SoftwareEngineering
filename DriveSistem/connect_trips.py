@@ -3,6 +3,7 @@ import os
 import uvicorn
 from fastapi import FastAPI, Depends
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from starlette.responses import JSONResponse
 
 from drive_sistem.adding_trip.repository.adding_trips_repository import AddingTripsRepository
 from drive_sistem.connect_trip.controller.passenger_controller import PassengerController
@@ -20,7 +21,9 @@ trips_repository = AddingTripsRepository()
 passengers = PassengerController(passenger_repository=passenger_repository)
 routes = ConnectTripsController(passenger_repository=passenger_repository, trips_repository=trips_repository)
 
-
+@app.get("/health", tags=["Health"])
+def healthcheck():
+    return JSONResponse(content={"status": "ok"})
 ######################Вход###############################
 @app.post("/token", tags=[PassengerController._LOG_IN], summary="Получение токена")
 def token(form_data: OAuth2PasswordRequestForm = Depends()):

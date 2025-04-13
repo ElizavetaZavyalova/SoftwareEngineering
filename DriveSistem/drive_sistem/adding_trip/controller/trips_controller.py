@@ -7,7 +7,8 @@ from tocken_generator.cryptography import Cryptography
 
 
 class AddingTripsController:
-    _EDITING_TRIPS="Редактирование поездок"
+    _EDITING_TRIPS = "Редактирование поездок"
+
     def __init__(self, driver_repository: DriverRepository, trips_repository: TripsRepository):
         self.drivers = driver_repository
         self.trips = trips_repository

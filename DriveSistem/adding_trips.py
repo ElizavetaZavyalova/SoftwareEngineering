@@ -3,6 +3,7 @@ import os
 import uvicorn
 from fastapi import FastAPI, Depends
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from starlette.responses import JSONResponse
 
 from admin_sistem.repository.trips_repository import TripsRepository
 from drive_sistem.adding_trip.controller.driver_controller import DriverController
@@ -20,6 +21,10 @@ driver_repository = DriverRepository(
 trips_repository = TripsRepository()
 drivers = DriverController(driver_repository=driver_repository)
 routes = AddingTripsController(driver_repository=driver_repository, trips_repository=trips_repository)
+
+@app.get("/health", tags=["Health"])
+def healthcheck():
+    return JSONResponse(content={"status": "ok"})
 
 
 ######################Вход###############################

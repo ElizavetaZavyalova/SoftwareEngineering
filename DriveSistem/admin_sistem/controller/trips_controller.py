@@ -7,30 +7,31 @@ from tocken_generator.cryptography import Cryptography
 
 class TripsController:
     _TRIPS = 'Поездки'
-    def __init__(self,trips: TripsRepository, admin_repository: AdminRepository):
+
+    def __init__(self, trips: TripsRepository, admin_repository: AdminRepository):
         self.trips = trips
         self.admins = admin_repository
 
-    def get_trips(self, token:str) -> list:
+    def get_trips(self, token: str) -> list:
         account = Cryptography().decrypt_token(token)
         if self.admins.is_admin(account):
             return self.trips.get_trips()
         raise HTTPException(status_code=400, detail="Incorrect username or password")
 
-    def delete_trip(self, token:str, id: int):
+    def delete_trip(self, token: str, id: int):
         account = Cryptography().decrypt_token(token)
         if self.admins.is_admin(account):
             return self.trips.delete_trip(id)
         raise HTTPException(status_code=400, detail="Incorrect username or password")
 
-    def get_trip(self, token:str, id: int):
+    def get_trip(self, token: str, id: int):
         account = Cryptography().decrypt_token(token)
         if self.admins.is_admin(account):
             return self.trips.get_trip(id)
         raise HTTPException(status_code=400, detail="Incorrect username or password")
 
-    def change_trip(self,id:int, token:str, trip):
+    def change_trip(self, id: int, token: str, trip):
         account = Cryptography().decrypt_token(token)
         if self.admins.is_admin(account):
-            return self.trips.change_trip(id=id,trip=trip)
+            return self.trips.change_trip(id=id, trip=trip)
         raise HTTPException(status_code=400, detail="Incorrect username or password")

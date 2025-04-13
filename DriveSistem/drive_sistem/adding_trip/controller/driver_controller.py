@@ -6,7 +6,8 @@ from tocken_generator.cryptography import Cryptography
 
 
 class DriverController:
-    _LOG_IN='Вход'
+    _LOG_IN = 'Вход'
+
     def __init__(self, driver_repository: DriverRepository):
         self.drivers = driver_repository
 

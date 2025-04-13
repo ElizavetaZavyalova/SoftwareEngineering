@@ -45,6 +45,11 @@ services:
       - postgres-admins
       - postgres-drivers
       - postgres-passengers
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8001/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   passenger:
     build:
@@ -63,6 +68,11 @@ services:
       - "8002:8000"
     depends_on:
       - postgres-passengers
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8002/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   driver:
     build:
@@ -81,6 +91,11 @@ services:
       - "8003:8000"
     depends_on:
       - postgres-drivers
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8003/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   adding_trips:
     build:
@@ -99,6 +114,11 @@ services:
       - "8004:8000"
     depends_on:
       - postgres-drivers
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8004/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   connect_trips:
     build:
@@ -117,6 +137,11 @@ services:
       - "8005:8000"
     depends_on:
       - postgres-passengers
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8005/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   postgres-passengers:
     image: postgres:15.5
@@ -129,6 +154,12 @@ services:
       - "5502:5432"
     volumes:
       - ./passenger_migrations/:/docker-entrypoint-initdb.d/
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U root -d passengers" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   postgres-drivers:
     image: postgres:15.5
     container_name: drivers-db
@@ -140,6 +171,12 @@ services:
       - "5501:5432"
     volumes:
       - ./drivers_migrations/:/docker-entrypoint-initdb.d/
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U root -d drivers" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   postgres-admins:
     image: postgres:15.5
     container_name: admins-db
@@ -151,6 +188,11 @@ services:
       - "5503:5432"
     volumes:
       - ./admins_migrations/:/docker-entrypoint-initdb.d/
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U root -d admins" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   passengers-db:

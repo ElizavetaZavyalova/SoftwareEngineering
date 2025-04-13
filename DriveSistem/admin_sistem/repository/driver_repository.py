@@ -21,13 +21,14 @@ class DriverRepository:
             if user:
                 db.delete(user)
                 db.commit()
-    def get_driver(self, id: int)->Driver:
+
+    def get_driver(self, id: int) -> Driver:
         with self.SessionLocal() as db:
-            driver=db.query(Driver_DB).filter(Driver_DB.id == id).first()
+            driver = db.query(Driver_DB).filter(Driver_DB.id == id).first()
             if driver:
                 return create_driver(driver)
 
-    def change_driver(self,id:int, driver:Driver):
+    def change_driver(self, id: int, driver: Driver):
         with self.SessionLocal() as db:
             driver_db = db.query(Driver_DB).filter(Driver_DB.id == id).first()
             if driver:

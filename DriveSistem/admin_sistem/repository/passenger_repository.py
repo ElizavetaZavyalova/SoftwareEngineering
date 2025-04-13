@@ -21,13 +21,14 @@ class PassengerRepository:
             if user:
                 db.delete(user)
                 db.commit()
-    def get_passenger(self, id: int)->Passenger:
+
+    def get_passenger(self, id: int) -> Passenger:
         with self.SessionLocal() as db:
-            passenger=db.query(Passenger_DB).filter(Passenger_DB.id == id).first()
+            passenger = db.query(Passenger_DB).filter(Passenger_DB.id == id).first()
             if passenger:
                 return create_passenger(passenger)
 
-    def change_passenger(self,id:int, passenger:Passenger):
+    def change_passenger(self, id: int, passenger: Passenger):
         with self.SessionLocal() as db:
             passenger_db = db.query(Passenger_DB).filter(Passenger_DB.id == id).first()
             if passenger:
