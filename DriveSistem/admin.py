@@ -39,17 +39,22 @@ trips = TripsController(trips=trips_repository, admin_repository=admins_reposito
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
+
 @app.get("/health", tags=["Health"])
 async def healthcheck():
     return JSONResponse(content={"status": "ok"})
+
+
 ######################Вход###############################
-@app.post("/token", tags=[AdminController._LOG_IN], summary="Получение токена")
+@app.post("/token", tags=[AdminController._LOG_IN],
+        summary="Получение токена")
 async def token(form_data: OAuth2PasswordRequestForm = Depends()):
     return admin.login(Account(email=form_data.username, password=form_data.password))
 
 
 # # # # # #
-@app.post("/admin/login", tags=[AdminController._LOG_IN], summary="Вход в аккаунт(Админестратор)")
+@app.post("/admin/login", tags=[AdminController._LOG_IN],
+        summary="Вход в аккаунт(Админестратор)")
 async def login(account: Account):
     return admin.login(account=account)
 
@@ -57,22 +62,26 @@ async def login(account: Account):
 ##########################################################
 
 ######################Водители############################
-@app.get("/admin/drivers/", tags=[DriverController._DRIVERS], summary="Получение всех водителей")
+@app.get("/admin/drivers/", tags=[DriverController._DRIVERS],
+        summary="Получение всех водителей")
 async def get_drivers(token: str = Depends(oauth2_scheme)) -> list:
     return drivers.get_drivers(token=token)
 
 
-@app.delete("/admin/driver/{id}/", tags=[DriverController._DRIVERS], summary="Удаление водителя по id")
+@app.delete("/admin/driver/{id}/", tags=[DriverController._DRIVERS],
+        summary="Удаление водителя по id")
 async def delete_driver(id: int, token: str = Depends(oauth2_scheme)):
     return drivers.delete_driver(id=id, token=token)
 
 
-@app.get("/admin/driver/{id}/", tags=[DriverController._DRIVERS], summary="Получение водителя по id")
+@app.get("/admin/driver/{id}/", tags=[DriverController._DRIVERS],
+        summary="Получение водителя по id")
 async def get_driver(id: int, token: str = Depends(oauth2_scheme)):
     return drivers.get_driver(id=id, token=token)
 
 
-@app.post("/admin/driver/{id}/", tags=[DriverController._DRIVERS], summary="Изменение водителя по id")
+@app.post("/admin/driver/{id}/", tags=[DriverController._DRIVERS],
+        summary="Изменение водителя по id")
 async def change_driver(id: int, driver: Driver, token: str = Depends(oauth2_scheme)):
     return drivers.change_driver(id=id, token=token, driver=driver)
 
@@ -80,22 +89,26 @@ async def change_driver(id: int, driver: Driver, token: str = Depends(oauth2_sch
 ##########################################################
 
 ######################Пассажиры############################
-@app.get("/admin/passengers/", tags=[PassengerController._PASSENGERS], summary="Получение всех пассажиров")
+@app.get("/admin/passengers/", tags=[PassengerController._PASSENGERS],
+        summary="Получение всех пассажиров")
 async def get_passengers(token: str = Depends(oauth2_scheme)) -> list:
     return passengers.get_passengers(token=token)
 
 
-@app.delete("/admin/passenger/{id}/", tags=[PassengerController._PASSENGERS], summary="Удаление пассажира по id")
+@app.delete("/admin/passenger/{id}/", tags=[PassengerController._PASSENGERS],
+        summary="Удаление пассажира по id")
 async def delete_passenger(id: int, token: str = Depends(oauth2_scheme)):
     return passengers.delete_passenger(id=id, token=token)
 
 
-@app.get("/admin/passenger/{id}/", tags=[PassengerController._PASSENGERS], summary="Получение пассажира по id")
+@app.get("/admin/passenger/{id}/", tags=[PassengerController._PASSENGERS],
+        summary="Получение пассажира по id")
 async def get_passenger(id: int, token: str = Depends(oauth2_scheme)):
     return passengers.get_passenger(id=id, token=token)
 
 
-@app.post("/admin/passenger/{id}/", tags=[PassengerController._PASSENGERS], summary="Изменение пассажира по id")
+@app.post("/admin/passenger/{id}/", tags=[PassengerController._PASSENGERS],
+        summary="Изменение пассажира по id")
 async def change_passenger(id: int, passenger: Passenger, token: str = Depends(oauth2_scheme)):
     return passengers.change_passenger(id=id, token=token, passenger=passenger)
 
@@ -103,22 +116,26 @@ async def change_passenger(id: int, passenger: Passenger, token: str = Depends(o
 ##########################################################
 
 ######################Поездки############################
-@app.get("/admin/trips/", tags=[TripsController._TRIPS], summary="Получение всех поездок")
+@app.get("/admin/trips/", tags=[TripsController._TRIPS],
+        summary="Получение всех поездок")
 async def get_trips(token: str = Depends(oauth2_scheme)) -> list:
     return trips.get_trips(token=token)
 
 
-@app.delete("/admin/trip/{id}/", tags=[TripsController._TRIPS], summary="Удаление поездки по id")
+@app.delete("/admin/trip/{id}/", tags=[TripsController._TRIPS],
+        summary="Удаление поездки по id")
 async def delete_trip(id: int, token: str = Depends(oauth2_scheme)):
     return trips.delete_trip(id=id, token=token)
 
 
-@app.get("/admin/trip/{id}/", tags=[TripsController._TRIPS], summary="Получение поездки по id")
+@app.get("/admin/trip/{id}/", tags=[TripsController._TRIPS],
+        summary="Получение поездки по id")
 async def get_trip(id: int, token: str = Depends(oauth2_scheme)):
     return trips.get_trip(id=id, token=token)
 
 
-@app.post("/admin/trip/{id}/", tags=[TripsController._TRIPS], summary="Изменение поездки по id")
+@app.post("/admin/trip/{id}/", tags=[TripsController._TRIPS],
+        summary="Изменение поездки по id")
 async def change_trip(id: int, trip: Trip, token: str = Depends(oauth2_scheme)):
     return trips.change_trip(id=id, token=token, trip=trip)
 

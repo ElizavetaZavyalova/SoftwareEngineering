@@ -21,34 +21,40 @@ trips_repository = AddingTripsRepository()
 passengers = PassengerController(passenger_repository=passenger_repository)
 routes = ConnectTripsController(passenger_repository=passenger_repository, trips_repository=trips_repository)
 
+
 @app.get("/health", tags=["Health"])
 async def healthcheck():
     return JSONResponse(content={"status": "ok"})
+
+
 ######################Вход###############################
-@app.post("/token", tags=[PassengerController._LOG_IN], summary="Получение токена")
+@app.post("/token", tags=[PassengerController._LOG_IN],
+        summary="Получение токена")
 async def token(form_data: OAuth2PasswordRequestForm = Depends()):
     return passengers.login(Account(email=form_data.username, password=form_data.password))
 
 
 ##########################################################
 @app.post("/passenger/trip/{id}/connect", tags=[ConnectTripsController._CONNECTING_TRIPS],
-            summary="Подключение текущего пассажира к поездке по id")
+        summary="Подключение текущего пассажира к поездке по id")
 async def connect_to_trip(id: int, token: str = Depends(oauth2_scheme)):
     return routes.connect_to_trip(id=id, token=token)
 
 
 @app.delete("/passenger/trip/{id}/cancel", tags=[ConnectTripsController._CONNECTING_TRIPS],
-            summary="Отключение текущего пассажира от поездки по id")
+        summary="Отключение текущего пассажира от поездки по id")
 async def cancel_trip(id: int, token: str = Depends(oauth2_scheme)):
     return routes.cancel_trip(id=id, token=token)
 
 
-@app.get("/passenger/trip/{id}/", tags=[ConnectTripsController._CONNECTING_TRIPS], summary="Получение поездки по id")
+@app.get("/passenger/trip/{id}/", tags=[ConnectTripsController._CONNECTING_TRIPS],
+        summary="Получение поездки по id")
 async def get_trip(id: int, token: str = Depends(oauth2_scheme)):
     return routes.get_trip(id=id, token=token)
 
 
-@app.get("/passenger/trips/", tags=[ConnectTripsController._CONNECTING_TRIPS], summary="Получение все поездок")
+@app.get("/passenger/trips/", tags=[ConnectTripsController._CONNECTING_TRIPS],
+        summary="Получение все поездок")
 async def get_trips(token: str = Depends(oauth2_scheme)):
     return routes.get_trips(token=token)
 

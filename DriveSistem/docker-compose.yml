@@ -25,6 +25,9 @@ services:
       - connect_trips
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost/health" ]
+      interval: 60s
+      timeout: 5s
+      retries: 3
 
   admin:
     build:
@@ -37,7 +40,7 @@ services:
       DATABASE_DRIVER_URL: postgresql://root:root@drivers-db:5432/drivers
       TOKEN_SECRET: 6916734b2465caf22d851d987cb36b739fb10257a0b79166ea0209da3edbfea6
       ALGO_SECRET: HS256
-      SALT_SECRET:  $2b$12$abcdefghijklmnopqrstuu
+      SALT_SECRET:  "$$2b$$12$$abcdefghijklmnopqrstuu"
       HOST: 0.0.0.0
       PORT: 8000
     restart: always
@@ -49,7 +52,7 @@ services:
       - postgres-passengers
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://0.0.0.0:8000/health" ]
-      interval: 10s
+      interval: 60s
       timeout: 5s
       retries: 3
 
@@ -62,7 +65,7 @@ services:
       DATABASE_PASSENGER_URL: postgresql://root:root@passengers-db:5432/passengers
       TOKEN_SECRET: 6916734b2465caf22d851d987cb36b739fb10257a0b79166ea0209da3edbfea6
       ALGO_SECRET: HS256
-      SALT_SECRET:  $2b$12$abcdefghijklmnopqrstuu
+      SALT_SECRET:  "$$2b$$12$$abcdefghijklmnopqrstuu"
       HOST: 0.0.0.0
       PORT: 8000
     restart: always
@@ -72,7 +75,7 @@ services:
       - postgres-passengers
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://0.0.0.0:8000/health" ]
-      interval: 10s
+      interval: 60s
       timeout: 5s
       retries: 3
 
@@ -85,7 +88,7 @@ services:
       DATABASE_DRIVER_URL: postgresql://root:root@drivers-db:5432/drivers
       TOKEN_SECRET: 6916734b2465caf22d851d987cb36b739fb10257a0b79166ea0209da3edbfea6
       ALGO_SECRET: HS256
-      SALT_SECRET:  $2b$12$abcdefghijklmnopqrstuu
+      SALT_SECRET:  "$$2b$$12$$abcdefghijklmnopqrstuu"
       HOST: 0.0.0.0
       PORT: 8000
     restart: always
@@ -95,7 +98,7 @@ services:
       - postgres-drivers
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://0.0.0.0:8000/health" ]
-      interval: 10s
+      interval: 60s
       timeout: 5s
       retries: 3
 
@@ -108,7 +111,7 @@ services:
       DATABASE_DRIVER_URL: postgresql://root:root@drivers-db:5432/drivers
       TOKEN_SECRET: 6916734b2465caf22d851d987cb36b739fb10257a0b79166ea0209da3edbfea6
       ALGO_SECRET: HS256
-      SALT_SECRET:  $2b$12$abcdefghijklmnopqrstuu
+      SALT_SECRET:  "$$2b$$12$$abcdefghijklmnopqrstuu"
       HOST: 0.0.0.0
       PORT: 8000
     restart: always
@@ -118,7 +121,7 @@ services:
       - postgres-drivers
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://0.0.0.0:8000/health" ]
-      interval: 10s
+      interval: 60s
       timeout: 5s
       retries: 3
 
@@ -131,7 +134,7 @@ services:
       DATABASE_PASSENGER_URL: postgresql://root:root@passengers-db:5432/passengers
       TOKEN_SECRET: 6916734b2465caf22d851d987cb36b739fb10257a0b79166ea0209da3edbfea6
       ALGO_SECRET: HS256
-      SALT_SECRET: $2b$12$abcdefghijklmnopqrstuu
+      SALT_SECRET: "$$2b$$12$$abcdefghijklmnopqrstuu"
       HOST: 0.0.0.0
       PORT: 8000
     restart: always
@@ -141,7 +144,7 @@ services:
       - postgres-passengers
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://0.0.0.0:8000/health" ]
-      interval: 10s
+      interval: 60s
       timeout: 5s
       retries: 3
 
@@ -158,7 +161,7 @@ services:
       - ./migrations/passenger_migrations/:/docker-entrypoint-initdb.d/
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U root -d passengers" ]
-      interval: 10s
+      interval: 60s
       timeout: 5s
       retries: 5
 
@@ -175,7 +178,7 @@ services:
       - ./migrations/drivers_migrations/:/docker-entrypoint-initdb.d/
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U root -d drivers" ]
-      interval: 10s
+      interval: 60s
       timeout: 5s
       retries: 5
 
@@ -192,7 +195,7 @@ services:
       - ./migrations/admins_migrations/:/docker-entrypoint-initdb.d/
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U root -d admins" ]
-      interval: 10s
+      interval: 60s
       timeout: 5s
       retries: 5
 

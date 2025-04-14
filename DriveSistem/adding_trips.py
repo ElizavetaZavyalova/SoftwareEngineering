@@ -28,7 +28,8 @@ def healthcheck():
 
 
 ######################Вход###############################
-@app.post("/token", tags=[DriverController._LOG_IN], summary="Получение токена")
+@app.post("/token", tags=[DriverController._LOG_IN],
+        summary="Получение токена")
 async def token(form_data: OAuth2PasswordRequestForm = Depends()):
     return drivers.login(Account(email=form_data.username, password=form_data.password))
 
@@ -58,7 +59,8 @@ async def update_trip_info(id: int, trip_info: TripDescription, token: str = Dep
     return routes.update_trip_info(id=id, trip_info=trip_info, token=token)
 
 
-@app.delete("/driver/trip/{id}", tags=[AddingTripsController._EDITING_TRIPS], summary="Удаление поездки по id")
+@app.delete("/driver/trip/{id}", tags=[AddingTripsController._EDITING_TRIPS],
+        summary="Удаление поездки по id")
 async def delete_trip(id: int, token: str = Depends(oauth2_scheme)):
     return routes.delete_trip(id=id, token=token)
 
