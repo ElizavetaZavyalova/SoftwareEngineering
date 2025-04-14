@@ -11,7 +11,13 @@ from connect_trip.repository.adding_trips_repository import AddingTripsRepositor
 from connect_trip.repository.passenger_repository import PassengerRepository
 from libs.entity.account import Account
 
-app = FastAPI()
+
+app = FastAPI(
+    title="FastAPI Token Authentication",
+    description="API для подключения к поездке",
+    version="1.0",
+    docs_url="/docs"
+)
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 passenger_repository = PassengerRepository(

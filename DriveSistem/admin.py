@@ -20,7 +20,7 @@ from libs.entity.trip.trip import Trip
 
 app = FastAPI(
     title="FastAPI Token Authentication",
-    description="API для ригестрации водителя",
+    description="API для администрирования системы",
     version="1.0",
     docs_url="/docs"
 )

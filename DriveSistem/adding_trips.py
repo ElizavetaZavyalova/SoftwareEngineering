@@ -12,7 +12,13 @@ from adding_trip.repository.driver_repository import DriverRepository
 from libs.entity.account import Account
 from libs.entity.trip.trip_description import TripDescription
 
-app = FastAPI()
+
+app = FastAPI(
+    title="FastAPI Token Authentication",
+    description="API для добавления поездки",
+    version="1.0",
+    docs_url="/docs"
+)
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
