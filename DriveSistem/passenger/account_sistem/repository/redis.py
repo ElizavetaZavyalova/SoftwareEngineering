@@ -1,5 +1,5 @@
-from driver.driver.rest.user import User
 from libs.email.entity.email_confirmation import EmailConfirmation
+from passenger.passenger.rest.user import User
 
 
 class Redis:

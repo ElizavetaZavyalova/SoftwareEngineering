@@ -1,6 +1,7 @@
 from pydantic import BaseModel, constr
 
-from driver.driver.rest.user import User
+from connect_trip.entity.passenger.db.user import User
+
 
 class Passenger(User):
     home_address: str

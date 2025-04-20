@@ -1,4 +1,4 @@
-from adding_trip.entity.trips.trip import Trip
+from connect_trip.entity.trips.trip import Trip
 
 
 class TripDB(Trip):

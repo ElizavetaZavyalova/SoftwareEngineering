@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from adding_trip.entity.driver.rest.driver import DriverInfo
+
 
 
 class TripDescription(BaseModel):
@@ -9,12 +9,12 @@ class TripDescription(BaseModel):
 
 
 class Trip(BaseModel):
-    driver: DriverInfo
+    driver: {}
     trip: TripDescription
     passengers: list
 
 
-def create_trip_description(trip_info: TripDescription, driver: DriverInfo) -> Trip:
+def create_trip_description(trip_info: TripDescription, driver: {}) -> Trip:
     return Trip(
         driver=driver,
         trip=trip_info,

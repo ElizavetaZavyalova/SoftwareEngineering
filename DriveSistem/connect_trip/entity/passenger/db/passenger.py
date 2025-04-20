@@ -1,8 +1,7 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import declarative_base
 
-from connect_trip.entity.passenger.rest.passenger import PassengerInfo
-from passenger.passenger.rest.passenger import Passenger
+from connect_trip.entity.passenger.rest.passenger import PassengerInfo, Passenger
 
 Base = declarative_base()
 class Passenger_DB(Base):

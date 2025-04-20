@@ -8,6 +8,7 @@ from starlette.responses import JSONResponse
 from driver.account_sistem.controller.controller import Controller, Tags
 from driver.driver.rest.driver import Driver
 from driver.driver_repository.redis import DriverRepositoryRedis
+from libs.email.entity.email_confirmation import EmailConfirmation
 from libs.tocken_generator.entity.account import Account
 
 from driver.driver_repository.rdbms import DriverRepositoryRDBMS
