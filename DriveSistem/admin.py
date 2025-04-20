@@ -9,14 +9,14 @@ from admin_sistem.controller.admin_controller import AdminController
 from admin_sistem.controller.driver_controller import DriverController
 from admin_sistem.controller.passenger_controller import PassengerController
 from admin_sistem.controller.trips_controller import TripsController
+from admin_sistem.entity.trips.rest.driver import Trip
 from admin_sistem.repository.admin_repository import AdminRepository
 from admin_sistem.repository.driver_repository import DriverRepository
 from admin_sistem.repository.passenger_repository import PassengerRepository
 from admin_sistem.repository.trips_repository import TripsRepository
-from libs.entity.account import Account
-from libs.entity.driver.rest.driver import Driver
-from libs.entity.passenger.rest.passenger import Passenger
-from libs.entity.trip.trip import Trip
+from libs.tocken_generator.entity.account import Account
+from admin_sistem.entity.driver.rest.driver import Driver
+from admin_sistem.entity.passenger.rest.passenger import Passenger
 
 app = FastAPI(
     title="FastAPI Token Authentication",

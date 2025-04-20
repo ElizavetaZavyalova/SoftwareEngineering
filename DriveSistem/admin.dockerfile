@@ -3,8 +3,7 @@ FROM python:3.12.8
 WORKDIR /app
 
 
-COPY libs/entity/ ./libs/entity
-COPY libs/tocken_generator/ ./libs/tocken_generator
+COPY libs/ ./libs/
 
 COPY admin_sistem/ ./admin_sistem
 COPY admin.py .

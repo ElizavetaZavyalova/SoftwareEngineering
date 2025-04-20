@@ -2,10 +2,10 @@ from fastapi import HTTPException
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from libs.account_sistem.repository.repositoryrdbms import RepositoryRDBMS
-from libs.entity.account import Account
-from libs.entity.driver.db.driver import Driver_DB, create_driver, create_model, update_model
-from libs.entity.driver.rest.driver import Driver
+from driver.account_sistem.repository.repositoryrdbms import RepositoryRDBMS
+from driver.driver.db.driver import create_model, Driver_DB, update_model, create_driver
+from driver.driver.rest.driver import Driver
+from libs.tocken_generator.entity.account import Account
 
 
 class DriverRepositoryRDBMS(RepositoryRDBMS):

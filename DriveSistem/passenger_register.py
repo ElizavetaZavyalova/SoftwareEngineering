@@ -5,10 +5,9 @@ from fastapi import FastAPI, Depends
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from starlette.responses import JSONResponse
 
-from libs.account_sistem.controller.controller import Tags, Controller
-from libs.entity.account import Account
-from libs.account_sistem.entity.email_confirmation import EmailConfirmation
-from libs.entity.passenger.rest.passenger import Passenger
+from libs.tocken_generator.entity.account import Account
+from passenger.account_sistem.controller.controller import Controller, Tags
+from passenger.passenger.rest.passenger import Passenger
 from passenger.passenger_repository.rdbms import PassengerRepositoryRDBMS
 from passenger.passenger_repository.redis import PassengerRepositoryRedis
 

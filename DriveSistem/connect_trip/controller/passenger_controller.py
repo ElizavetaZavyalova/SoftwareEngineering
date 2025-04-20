@@ -1,7 +1,7 @@
 from http.client import HTTPException
 
 from connect_trip.repository.passenger_repository import PassengerRepository
-from libs.entity.account import Account
+from libs.tocken_generator.entity.account import Account
 from libs.tocken_generator.cryptography import Cryptography
 
 

@@ -2,7 +2,7 @@ from fastapi import HTTPException
 
 from admin_sistem.repository.admin_repository import AdminRepository
 from libs.tocken_generator.cryptography import Cryptography
-from libs.entity.account import Account
+from libs.tocken_generator.entity.account import Account
 
 
 class AdminController:

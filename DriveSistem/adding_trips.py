@@ -7,10 +7,10 @@ from starlette.responses import JSONResponse
 
 from adding_trip.controller.driver_controller import DriverController
 from adding_trip.controller.trips_controller import AddingTripsController
+from adding_trip.entity.trips.trip import TripDescription
 from adding_trip.repository.adding_trips_repository import AddingTripsRepository
 from adding_trip.repository.driver_repository import DriverRepository
-from libs.entity.account import Account
-from libs.entity.trip.trip_description import TripDescription
+from libs.tocken_generator.entity.account import Account
 
 
 app = FastAPI(
@@ -24,7 +24,8 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 driver_repository = DriverRepository(
     url=os.getenv("DATABASE_DRIVER_URL", "postgresql://root:root@localhost:5501/drivers"))
-trips_repository = AddingTripsRepository()
+trips_repository = AddingTripsRepository(url=os.getenv("DATABASE_TRIPS_URL",
+                                                    'mongodb://root:root@localhost:27018/'))
 drivers = DriverController(driver_repository=driver_repository)
 routes = AddingTripsController(driver_repository=driver_repository, trips_repository=trips_repository)
 
@@ -55,19 +56,19 @@ async def get_all_trips(token: str = Depends(oauth2_scheme)):
 
 @app.get("/driver/trip/{id}/", tags=[AddingTripsController._EDITING_TRIPS],
         summary="Получение конкретной поездки по id")
-async def get_trip(id: int, token: str = Depends(oauth2_scheme)):
+async def get_trip(id: str, token: str = Depends(oauth2_scheme)):
     return routes.get_trip(id=id, token=token)
 
 
 @app.patch("/driver/trip/{id}/info", tags=[AddingTripsController._EDITING_TRIPS],
         summary="Обновление информации о поездке по id")
-async def update_trip_info(id: int, trip_info: TripDescription, token: str = Depends(oauth2_scheme)):
+async def update_trip_info(id: str, trip_info: TripDescription, token: str = Depends(oauth2_scheme)):
     return routes.update_trip_info(id=id, trip_info=trip_info, token=token)
 
 
 @app.delete("/driver/trip/{id}", tags=[AddingTripsController._EDITING_TRIPS],
         summary="Удаление поездки по id")
-async def delete_trip(id: int, token: str = Depends(oauth2_scheme)):
+async def delete_trip(id: str, token: str = Depends(oauth2_scheme)):
     return routes.delete_trip(id=id, token=token)
 
 

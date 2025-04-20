@@ -4,7 +4,7 @@ from jose import jwt
 import bcrypt
 
 from libs.tocken_generator.entity.token import Token
-from libs.entity.account import Account
+from libs.tocken_generator.entity.account import Account
 
 class Cryptography:
     _instance = None

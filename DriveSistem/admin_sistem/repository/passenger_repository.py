@@ -1,8 +1,8 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from libs.entity.passenger.db.passenger import Passenger_DB, create_passenger, update_model
-from libs.entity.passenger.rest.passenger import Passenger
+from admin_sistem.entity.passenger.db.passenger import Passenger_DB, create_passenger, update_model
+from admin_sistem.entity.passenger.rest.passenger import Passenger
 
 
 class PassengerRepository:

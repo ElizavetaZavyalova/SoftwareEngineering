@@ -1,10 +1,10 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from libs.account_sistem.repository.repositoryrdbms import RepositoryRDBMS
-from libs.entity.account import Account
-from libs.entity.passenger.db.passenger import Passenger_DB, create_passenger, create_model, update_model
-from libs.entity.passenger.rest.passenger import Passenger
+from libs.tocken_generator.entity.account import Account
+from passenger.account_sistem.repository.repositoryrdbms import RepositoryRDBMS
+from passenger.passenger.db.passenger import create_model, Passenger_DB, update_model, create_passenger
+from passenger.passenger.rest.passenger import Passenger
 
 
 class PassengerRepositoryRDBMS(RepositoryRDBMS):

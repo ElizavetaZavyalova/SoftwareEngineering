@@ -38,6 +38,7 @@ services:
       DATABASE_PASSENGER_URL: postgresql://root:root@passengers-db:5432/passengers
       DATABASE_ADMINS_URL: postgresql://root:root@admins-db:5432/admins
       DATABASE_DRIVER_URL: postgresql://root:root@drivers-db:5432/drivers
+      DATABASE_TRIPS_URL: mongodb://root:root@trips-mongo:27017/
       TOKEN_SECRET: 6916734b2465caf22d851d987cb36b739fb10257a0b79166ea0209da3edbfea6
       ALGO_SECRET: HS256
       SALT_SECRET:  "$$2b$$12$$abcdefghijklmnopqrstuu"
@@ -50,6 +51,7 @@ services:
       - postgres-admins
       - postgres-drivers
       - postgres-passengers
+      - mongo-trips
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://0.0.0.0:8000/health" ]
       interval: 60s
@@ -109,6 +111,7 @@ services:
     container_name: adding_trips
     environment:
       DATABASE_DRIVER_URL: postgresql://root:root@drivers-db:5432/drivers
+      DATABASE_TRIPS_URL: mongodb://root:root@trips-mongo:27017/
       TOKEN_SECRET: 6916734b2465caf22d851d987cb36b739fb10257a0b79166ea0209da3edbfea6
       ALGO_SECRET: HS256
       SALT_SECRET:  "$$2b$$12$$abcdefghijklmnopqrstuu"
@@ -119,6 +122,7 @@ services:
       - "8004:8000"
     depends_on:
       - postgres-drivers
+      - mongo-trips
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://0.0.0.0:8000/health" ]
       interval: 60s
@@ -132,6 +136,7 @@ services:
     container_name: connect_trips
     environment:
       DATABASE_PASSENGER_URL: postgresql://root:root@passengers-db:5432/passengers
+      DATABASE_TRIPS_URL: mongodb://root:root@trips-mongo:27017/
       TOKEN_SECRET: 6916734b2465caf22d851d987cb36b739fb10257a0b79166ea0209da3edbfea6
       ALGO_SECRET: HS256
       SALT_SECRET: "$$2b$$12$$abcdefghijklmnopqrstuu"
@@ -142,6 +147,7 @@ services:
       - "8005:8000"
     depends_on:
       - postgres-passengers
+      - mongo-trips
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://0.0.0.0:8000/health" ]
       interval: 60s
@@ -199,7 +205,25 @@ services:
       timeout: 5s
       retries: 5
 
+  mongo-trips:
+    image: mongo:6.0
+    container_name: trips-mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: trips
+    ports:
+      - "27018:27017"
+    volumes:
+      - ./migrations/trips_migrations/:/docker-entrypoint-initdb.d/
+    healthcheck:
+      test: [ "CMD", "mongosh", "--username", "root", "--password", "root", "--eval", "mongo.adminCommand('ping')" ]
+      interval: 60s
+      timeout: 10s
+      retries: 5
+
 volumes:
   passengers-db:
   drivers-db:
   admins-db:
+  trips-mongo:

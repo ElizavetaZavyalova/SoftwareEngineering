@@ -1,6 +1,6 @@
-from libs.account_sistem.entity.email_confirmation import EmailConfirmation
-from libs.account_sistem.repository.redis import Redis
-from libs.entity.passenger.rest.passenger import Passenger
+from libs.email.entity.email_confirmation import EmailConfirmation
+from passenger.account_sistem.repository.redis import Redis
+from passenger.passenger.rest.passenger import Passenger
 
 
 class PassengerRepositoryRedis(Redis):

@@ -1,8 +1,9 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from libs.entity.account import Account
-from libs.entity.admins.db.admin import Admin_DB
+from admin_sistem.entity.admins.db.admin import Admin_DB
+from libs.tocken_generator.entity.account import Account
+
 
 
 class AdminRepository:

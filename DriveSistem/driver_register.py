@@ -5,13 +5,12 @@ from fastapi import FastAPI, Depends
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from starlette.responses import JSONResponse
 
+from driver.account_sistem.controller.controller import Controller, Tags
+from driver.driver.rest.driver import Driver
 from driver.driver_repository.redis import DriverRepositoryRedis
-from libs.account_sistem.controller.controller import Controller, Tags
-from libs.entity.account import Account
-from libs.account_sistem.entity.email_confirmation import EmailConfirmation
+from libs.tocken_generator.entity.account import Account
 
 from driver.driver_repository.rdbms import DriverRepositoryRDBMS
-from libs.entity.driver.rest.driver import Driver
 
 app = FastAPI(
     title="FastAPI Token Authentication",

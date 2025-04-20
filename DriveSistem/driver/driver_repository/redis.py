@@ -1,6 +1,7 @@
-from libs.account_sistem.entity.email_confirmation import EmailConfirmation
-from libs.account_sistem.repository.redis import Redis
-from libs.entity.driver.rest.driver import Driver
+
+from driver.account_sistem.repository.redis import Redis
+from driver.driver.rest.driver import Driver
+from libs.email.entity.email_confirmation import EmailConfirmation
 
 
 class DriverRepositoryRedis(Redis):
