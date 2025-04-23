@@ -1,10 +1,9 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from connect_trip.entity.passenger.db.passenger import create_passenger_info
+from connect_trip.entity.passenger.db.passenger import create_passenger_info, Passenger_DB
 from connect_trip.entity.passenger.rest.passenger import PassengerInfo
 from libs.tocken_generator.entity.account import Account
-from passenger.passenger.db.passenger import Passenger_DB
 
 
 class PassengerRepository:

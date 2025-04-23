@@ -56,8 +56,8 @@ async def cancel_trip(id: str, token: str = Depends(oauth2_scheme)):
 
 @app.get("/passenger/trip/{id}/", tags=[ConnectTripsController._CONNECTING_TRIPS],
         summary="Получение поездки по id")
-async def get_trip(id: str, token: str = Depends(oauth2_scheme)):
-    return routes.get_trip(id=id, token=token)
+async def get_connected_trip(id: str, token: str = Depends(oauth2_scheme)):
+    return routes.get_connected_trip(id=id, token=token)
 
 
 @app.get("/passenger/trips/{title}", tags=[ConnectTripsController._CONNECTING_TRIPS],

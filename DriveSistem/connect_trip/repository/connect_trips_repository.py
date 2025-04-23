@@ -16,10 +16,10 @@ class ConnectTripsRepository:
         self.db = self.client['trips']
         self.collection = self.db['trips']
 
-    def connect_to_trip(self,id: str, passenger: PassengerInfo):
-        result=self.collection.update_one(
-            {"_id": ObjectId(id)},
-            {"$push": {"passengers": passenger.model_dump(exclude_none=True, by_alias=True)}}
+    def connect_to_trip(self, id: str, passenger: PassengerInfo):
+        result = self.collection.update_one(
+            {"_id": ObjectId(id), "passengers": {"$not": {"$elemMatch": passenger.model_dump(exclude_none=True, by_alias=True)}}},
+            {"$addToSet": {"passengers":passenger.model_dump(exclude_none=True, by_alias=True)}}
         )
         if result.modified_count == 0:
             raise HTTPException(status_code=400, detail="Not Found")
@@ -34,7 +34,7 @@ class ConnectTripsRepository:
             raise HTTPException(status_code=400, detail="Not Found")
         return result.modified_count
 
-    def get_trip(self, id: str, passenger: PassengerInfo):
+    def get_connected_trip(self, id: str, passenger: PassengerInfo):
         trip = self.collection.find_one({
             "_id": ObjectId(id),
             "passengers": {
@@ -43,6 +43,8 @@ class ConnectTripsRepository:
                 }
             }
         })
+        if trip is None:
+            raise HTTPException(status_code=400, detail="Not Found")
         trip["id"] = str(trip.pop("_id"))
         return TripDB(**trip)
 
@@ -60,7 +62,7 @@ class ConnectTripsRepository:
         trips_collection = self.collection.find({
             "passengers": {
                 "$elemMatch": {
-                    "account_id": passenger
+                    "account_id": passenger.account_id
                 }
             }
         })

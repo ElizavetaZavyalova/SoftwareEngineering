@@ -26,11 +26,11 @@ class ConnectTripsController:
             return self.trips.cancel_trip(id=id, passenger=passenger)
         raise HTTPException(status_code=400, detail="Incorrect username or password")
 
-    def get_trip(self, id: str, token: str):
+    def get_connected_trip(self, id: str, token: str):
         account = Cryptography().decrypt_token(token)
         passenger = self.passengers.get_account(account)
         if passenger:
-            return self.trips.get_trip(id=id, passenger=passenger)
+            return self.trips.get_connected_trip(id=id, passenger=passenger)
         raise HTTPException(status_code=400, detail="Incorrect username or password")
 
     def get_trips(self,title:str, token: str):

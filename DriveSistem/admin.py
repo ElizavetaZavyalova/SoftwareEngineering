@@ -9,7 +9,7 @@ from admin_sistem.controller.admin_controller import AdminController
 from admin_sistem.controller.driver_controller import DriverController
 from admin_sistem.controller.passenger_controller import PassengerController
 from admin_sistem.controller.trips_controller import TripsController
-from admin_sistem.entity.trips.rest.driver import Trip
+from admin_sistem.entity.trips.rest.trips import Trip
 from admin_sistem.repository.admin_repository import AdminRepository
 from admin_sistem.repository.driver_repository import DriverRepository
 from admin_sistem.repository.passenger_repository import PassengerRepository
@@ -24,7 +24,8 @@ app = FastAPI(
     version="1.0",
     docs_url="/docs"
 )
-trips_repository = TripsRepository()
+trips_repository = TripsRepository(
+    url=os.getenv("DATABASE_TRIPS_URL", "mongodb://root:root@localhost:27018/"))
 passengers_repository = PassengerRepository(
     url=os.getenv("DATABASE_PASSENGER_URL", "postgresql://root:root@localhost:5502/passsengers"))
 admins_repository = AdminRepository(
@@ -124,19 +125,19 @@ async def get_trips(token: str = Depends(oauth2_scheme)) -> list:
 
 @app.delete("/admin/trip/{id}/", tags=[TripsController._TRIPS],
         summary="Удаление поездки по id")
-async def delete_trip(id: int, token: str = Depends(oauth2_scheme)):
+async def delete_trip(id: str, token: str = Depends(oauth2_scheme)):
     return trips.delete_trip(id=id, token=token)
 
 
 @app.get("/admin/trip/{id}/", tags=[TripsController._TRIPS],
         summary="Получение поездки по id")
-async def get_trip(id: int, token: str = Depends(oauth2_scheme)):
+async def get_trip(id: str, token: str = Depends(oauth2_scheme)):
     return trips.get_trip(id=id, token=token)
 
 
 @app.post("/admin/trip/{id}/", tags=[TripsController._TRIPS],
         summary="Изменение поездки по id")
-async def change_trip(id: int, trip: Trip, token: str = Depends(oauth2_scheme)):
+async def change_trip(id: str, trip: Trip, token: str = Depends(oauth2_scheme)):
     return trips.change_trip(id=id, token=token, trip=trip)
 
 
