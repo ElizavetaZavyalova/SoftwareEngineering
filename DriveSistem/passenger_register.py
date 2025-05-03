@@ -10,7 +10,7 @@ from libs.tocken_generator.entity.account import Account
 from passenger.account_sistem.controller.controller import Controller, Tags
 from passenger.passenger.rest.passenger import Passenger
 from passenger.passenger_repository.rdbms import PassengerRepositoryRDBMS
-from passenger.passenger_repository.redis import PassengerRepositoryRedis
+from passenger.passenger_repository.redis import PassengerRepositoryRedis, PassengerCashRepositoryRedis
 
 app = FastAPI(
     title="FastAPI Token Authentication",
@@ -18,10 +18,11 @@ app = FastAPI(
     version="1.0",
     docs_url="/docs"
 )
-redis_repository = PassengerRepositoryRedis()
+redis_repository = PassengerRepositoryRedis(url=os.getenv("REDIS_PASSWORD_CASH", "redis://localhost:6381/0"))
+cash=PassengerCashRepositoryRedis(url=os.getenv("CASH", "redis://localhost:6382/0"))
 account_repository = PassengerRepositoryRDBMS(
     url=os.getenv("DATABASE_PASSENGER_URL", "postgresql://root:root@localhost:5502/passengers"))
-controller = Controller(redis=redis_repository, rdbms=account_repository)
+controller = Controller(redis=redis_repository, rdbms=account_repository, cash=cash)
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 

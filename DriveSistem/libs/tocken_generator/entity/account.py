@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr
-
+DEFAULT_PASSWORD='******************************'
 
 class Account(BaseModel):
     email: EmailStr

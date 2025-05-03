@@ -39,6 +39,7 @@ services:
       DATABASE_ADMINS_URL: postgresql://root:root@admins-db:5432/admins
       DATABASE_DRIVER_URL: postgresql://root:root@drivers-db:5432/drivers
       DATABASE_TRIPS_URL: mongodb://root:root@trips-mongo:27017/
+      ACCOUNT_CASH: mabe_add_cash_late
       TOKEN_SECRET: 6916734b2465caf22d851d987cb36b739fb10257a0b79166ea0209da3edbfea6
       ALGO_SECRET: HS256
       SALT_SECRET:  "$$2b$$12$$abcdefghijklmnopqrstuu"
@@ -66,6 +67,8 @@ services:
     environment:
       DATABASE_PASSENGER_URL: postgresql://root:root@passengers-db:5432/passengers
       TOKEN_SECRET: 6916734b2465caf22d851d987cb36b739fb10257a0b79166ea0209da3edbfea6
+      REDIS_PASSWORD_CASH: redis://reg-passengers-db:6379/0
+      CASH: redis://cash-passengers-db:6379/0
       ALGO_SECRET: HS256
       SALT_SECRET:  "$$2b$$12$$abcdefghijklmnopqrstuu"
       HOST: 0.0.0.0
@@ -89,6 +92,8 @@ services:
     environment:
       DATABASE_DRIVER_URL: postgresql://root:root@drivers-db:5432/drivers
       TOKEN_SECRET: 6916734b2465caf22d851d987cb36b739fb10257a0b79166ea0209da3edbfea6
+      REDIS_PASSWORD_CASH: redis://reg-drivers-db:6379/0
+      CASH: redis://cash-drivers-db:6379/0
       ALGO_SECRET: HS256
       SALT_SECRET:  "$$2b$$12$$abcdefghijklmnopqrstuu"
       HOST: 0.0.0.0
@@ -185,6 +190,50 @@ services:
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U root -d drivers" ]
       interval: 60s
+      timeout: 5s
+      retries: 5
+
+  redis-reg-passengers:
+    image: redis:7.2
+    container_name: reg-passengers-db
+    ports:
+      - "6381:6379"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+
+  redis-cash-passengers:
+    image: redis:7.2
+    container_name: cash-passengers-db
+    ports:
+      - "6382:6379"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+
+  redis-reg-drivers:
+    image: redis:7.2
+    container_name: reg-drivers-db
+    ports:
+      - "6383:6379"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+
+  redis-cash-drivers:
+    image: redis:7.2
+    container_name: cash-drivers-db
+    ports:
+      - "6384:6379"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 30s
       timeout: 5s
       retries: 5
 

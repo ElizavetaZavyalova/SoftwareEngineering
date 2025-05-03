@@ -1,9 +1,9 @@
 from fastapi import HTTPException
 
 
-from driver.account_sistem.repository.redis import Redis
 from driver.account_sistem.repository.repositoryrdbms import RepositoryRDBMS
 from driver.driver.rest.user import User
+from driver.driver_repository.redis import DriverRepositoryRedis, DriverCashRepositoryRedis
 from libs.email.entity.email_confirmation import EmailConfirmation
 from libs.email.send_email import EmailSender
 from libs.tocken_generator.cryptography import Cryptography
@@ -18,9 +18,10 @@ class Tags:
 
 
 class Controller:
-    def __init__(self, redis: Redis, rdbms: RepositoryRDBMS):
+    def __init__(self, redis: DriverRepositoryRedis, rdbms: RepositoryRDBMS, cash:DriverCashRepositoryRedis):
         self.redis = redis
         self.rdbms = rdbms
+        self.cash = cash
 
     def register_user(self, user: User):
         user.password = Cryptography().hash_password(password=user.password)
@@ -66,9 +67,13 @@ class Controller:
         raise HTTPException(status_code=400, detail="Incorrect username or password")
 
     def get_user_profile(self, token: str):
+        user = self.cash.get_user_profile(token=token)
+        if user:
+            return user
         account = Cryptography().decrypt_token(token)
         user = self.rdbms.get_account(account=account)
         if user:
+            self.cash.user_profile_cashed(token=token, user=user)
             return user
         raise HTTPException(status_code=400, detail="Profile not found")
 
@@ -76,11 +81,13 @@ class Controller:
         account = Cryptography().decrypt_token(token)
         user.password = Cryptography().hash_password(password=user.password)
         if self.rdbms.update_profile(account=account, user=user):
+            self.cash.change_user_profile(token, user=user)
             return {'status': 'success', 'message': f'Profile was change {repr(user)}'}
         raise HTTPException(status_code=400, detail=f"{user.email} is already use")
 
     def delete_profile(self, token: str):
         account = Cryptography().decrypt_token(token)
         if self.rdbms.delete_profile(account=account):
+            self.cash.delete_user_profile(token)
             return {'status': 'success', 'message': f'Profile was delete'}
         raise HTTPException(status_code=400, detail=f"account not found")

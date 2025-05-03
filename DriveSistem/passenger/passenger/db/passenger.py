@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import declarative_base
 
+from libs.tocken_generator.entity.account import DEFAULT_PASSWORD
 from passenger.passenger.rest.passenger import Passenger
 
 Base = declarative_base()
@@ -45,5 +46,5 @@ def create_passenger(model: Passenger_DB) -> Passenger:
                         patronymic=model.patronymic,
                         phone_number=model.phone,
                         email=model.email,
-                        password="*************",
+                        password=DEFAULT_PASSWORD,
                         home_address=model.home_address)

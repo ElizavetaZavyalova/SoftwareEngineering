@@ -7,7 +7,7 @@ from starlette.responses import JSONResponse
 
 from driver.account_sistem.controller.controller import Controller, Tags
 from driver.driver.rest.driver import Driver
-from driver.driver_repository.redis import DriverRepositoryRedis
+from driver.driver_repository.redis import DriverRepositoryRedis, DriverCashRepositoryRedis
 from libs.email.entity.email_confirmation import EmailConfirmation
 from libs.tocken_generator.entity.account import Account
 
@@ -19,10 +19,11 @@ app = FastAPI(
     version="1.0",
     docs_url="/docs"
 )
-redis_repository = DriverRepositoryRedis()
+redis_repository = DriverRepositoryRedis(url=os.getenv("REDIS_PASSWORD_CASH", "redis://localhost:6383/0"))
+cash=DriverCashRepositoryRedis(url=os.getenv("CASH", "redis://localhost:6384/0"))
 account_repository = DriverRepositoryRDBMS(
     os.getenv("DATABASE_DRIVER_URL", "postgresql://root:root@localhost:5501/drivers"))
-controller = Controller(redis=redis_repository, rdbms=account_repository)
+controller = Controller(redis=redis_repository, rdbms=account_repository, cash=cash)
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
