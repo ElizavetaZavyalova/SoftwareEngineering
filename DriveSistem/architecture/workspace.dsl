@@ -13,7 +13,7 @@ workspace "Name" "Description" {
         email = SoftwareSystem "Email" {
             tags  EMAIL
         }
-        accountSystem = SoftwareSystem "Система Аккаунтов" {
+        passengerAccountSystem = SoftwareSystem "Система Аккаунтов пассажиров" {
             tags ACCOUNT
             passengerDB = container "База данных пользователей" {
                 tags RDBMS
@@ -22,6 +22,14 @@ workspace "Name" "Description" {
                 tags REGISTER
             }
             passengerRedis = container "Хранилище ключей регистрации пасажиров" {
+                tags REDIS
+            }
+            passengerCash = container "Кеш пасажиров" {
+                tags REDIS
+            }
+        }
+        driverAccountSystem = SoftwareSystem "Система Аккаунтов водителей" {
+            driverCash = container "Кеш водителей" {
                 tags REDIS
             }
             driverRedis = container "Хранилище ключей регистрации водителей" {
@@ -53,29 +61,31 @@ workspace "Name" "Description" {
             }
         }
         admin -> adminSystem.adminestration "Получает доступ ко всем базам данных системы"
-        adminSystem.adminestration -> accountSystem.passengerDB "Получение информации об аккаунтах"
-        adminSystem.adminestration -> accountSystem.driverDB "Получение информации об аккаунтах"
+        adminSystem.adminestration -> passengerAccountSystem.passengerDB "Получение информации об аккаунтах"
+        adminSystem.adminestration -> driverAccountSystem.driverDB "Получение информации об аккаунтах"
         adminSystem.adminestration -> tripsSystem.tripsDB "Получение информации о поезках"
 
-        passenger -> accountSystem.passengerAccount "Регистрация/Вход в акаунт"
-        accountSystem.passengerAccount -> accountSystem.passengerDB "Редактирование данных акаунта"
-        accountSystem.passengerAccount -> accountSystem.passengerRedis "Получение кода подтверждения подлиности email"
-        accountSystem.passengerAccount -> email "Отправка кода подтверждения"
+        passenger -> passengerAccountSystem.passengerAccount "Регистрация/Вход в акаунт"
+        passengerAccountSystem.passengerAccount -> passengerAccountSystem.passengerDB "Редактирование данных акаунта"
+        passengerAccountSystem.passengerAccount -> passengerAccountSystem.passengerRedis "Получение кода подтверждения подлиности email"
+        passengerAccountSystem.passengerAccount -> passengerAccountSystem.passengerCash "Keширование информации об аккаунте"
+        passengerAccountSystem.passengerAccount -> email "Отправка кода подтверждения"
         passenger -> email "Чтение письма с кодом подтверждения email"
 
-        driver -> accountSystem.driverAccount "Регистрация/Вход в акаунт"
-        accountSystem.driverAccount -> accountSystem.driverDB "Редактирование данных акаунта"
-        accountSystem.driverAccount -> accountSystem.driverRedis "Получение кода подтверждения подлиности email"
-        accountSystem.driverAccount -> email "Отправка кода подтверждения"
+        driver -> driverAccountSystem.driverAccount "Регистрация/Вход в акаунт"
+        driverAccountSystem.driverAccount -> driverAccountSystem.driverDB "Редактирование данных акаунта"
+        driverAccountSystem.driverAccount -> driverAccountSystem.driverRedis "Получение кода подтверждения подлиности email"
+        driverAccountSystem.driverAccount -> driverAccountSystem.driverCash "Keширование информации об аккаунте"
+        driverAccountSystem.driverAccount -> email "Отправка кода подтверждения"
         driver -> email "Чтение письма с кодом подтверждения email"
 
         driver ->  tripsSystem.addingTrip "Добавление новой поездки"
         tripsSystem.addingTrip -> tripsSystem.tripsDB "Получение информации о поездке"
-        tripsSystem.addingTrip -> accountSystem.driverDB "Получение инфлормации об аккаунте"
+        tripsSystem.addingTrip -> driverAccountSystem.driverDB "Получение инфлормации об аккаунте"
 
         passenger ->  tripsSystem.connectTrip "Подключение к поездке"
         tripsSystem.connectTrip -> tripsSystem.tripsDB "Получение информации о поездке"
-        tripsSystem.connectTrip -> accountSystem.passengerDB "Получение инфлормации об аккаунте"
+        tripsSystem.connectTrip -> passengerAccountSystem.passengerDB "Получение инфлормации об аккаунте"
 
 
     }
@@ -92,10 +102,16 @@ workspace "Name" "Description" {
         container adminSystem  "AdminSystemWorks" {
             include *
         }
-        systemContext accountSystem "AccountSystem" {
+        systemContext passengerAccountSystem "passengerAccountSystem" {
             include *
         }
-        container accountSystem "AccountSystemWorks" {
+        container passengerAccountSystem "passengerAccountSystemWorks" {
+            include *
+        }
+        systemContext driverAccountSystem "driverAccountSystem" {
+            include *
+        }
+        container driverAccountSystem "driverAccountSystemWorks" {
             include *
         }
         styles {

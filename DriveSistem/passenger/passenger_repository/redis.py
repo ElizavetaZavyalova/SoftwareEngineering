@@ -31,7 +31,7 @@ class PassengerCashRepositoryRedis(RedisRepository):
 
     def change_user_profile(self, token: str, user: Passenger) -> None:
         super().delete_key(key_model=token)
-        new_token= Cryptography().generate_token(account=Account(email=user.email,password=Cryptography().hash_password(user.password))).access_token
+        new_token = Cryptography().generate_token(account=Account(email=user.email,password=Cryptography().hash_password(user.password))).access_token
         user.password=DEFAULT_PASSWORD
         super().register_user(key_model=new_token, user=user, ttl_seconds=60 * 60 * 24)
 
